@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+/**
+ * @author mumu
+ * @date 2020/1/11
+ */
 @RestController
 @RequestMapping(value = "/admin")
 public class AdminController {

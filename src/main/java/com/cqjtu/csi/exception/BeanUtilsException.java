@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus;
 /**
  * BeanUtils exception.
  *
- * @author johnniang
+ * @author mumu
+ * @date 2020/1/12
  */
 public class BeanUtilsException extends BaseException {
 

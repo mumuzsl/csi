@@ -5,7 +5,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-
+/**
+ * @author mumu
+ * @date 2020/1/14
+ */
 public interface CacheStore<K, V> {
 
     /**

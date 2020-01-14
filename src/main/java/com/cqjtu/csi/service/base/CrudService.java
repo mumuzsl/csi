@@ -6,6 +6,10 @@ import org.springframework.util.Assert;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+/**
+ * @author mumu
+ * @date 2020/1/12
+ */
 public abstract class CrudService<DOMAIN, ID> {
 
     private final String domainName;

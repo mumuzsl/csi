@@ -5,6 +5,10 @@ import org.springframework.lang.NonNull;
 
 import java.util.Optional;
 
+/**
+ * @author mumu
+ * @date 2020/1/11
+ */
 public interface UserRepository extends BaseRepository<User, Integer> {
 
     /**

@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * @author mumu
+ * @date 2020/1/11
+ */
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {

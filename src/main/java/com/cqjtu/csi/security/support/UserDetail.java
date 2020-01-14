@@ -2,6 +2,10 @@ package com.cqjtu.csi.security.support;
 
 import com.cqjtu.csi.model.entity.User;
 
+/**
+ * @author mumu
+ * @date 2020/1/14
+ */
 public class UserDetail {
 
     private User user;

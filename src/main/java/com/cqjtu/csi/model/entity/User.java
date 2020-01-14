@@ -6,6 +6,10 @@ import cn.hutool.crypto.digest.BCrypt;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * @author mumu
+ * @date 2020/1/11
+ */
 @Entity
 @Table(name = "user")
 public class User extends BaseEntity {

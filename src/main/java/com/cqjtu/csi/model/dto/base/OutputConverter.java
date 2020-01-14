@@ -11,7 +11,8 @@ import static com.cqjtu.csi.utils.BeanUtils.updateProperties;
  *
  * @param <DTO>    the implementation class type
  * @param <DOMAIN> doamin type
- * @author johnniang
+ * @author mumu
+ * @date 2020/1/13
  */
 public interface OutputConverter<DTO extends OutputConverter<DTO, DOMAIN>, DOMAIN> {
 

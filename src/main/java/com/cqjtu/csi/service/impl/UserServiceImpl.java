@@ -16,6 +16,10 @@ import org.springframework.util.Assert;
 import javax.persistence.NonUniqueResultException;
 import java.util.Optional;
 
+/**
+ * @author mumu
+ * @date 2020/1/11
+ */
 @Service
 public class UserServiceImpl extends CrudService<User, Integer> implements UserService {
 

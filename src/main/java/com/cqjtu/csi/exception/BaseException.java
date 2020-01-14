@@ -7,7 +7,8 @@ import org.springframework.lang.Nullable;
 /**
  * Base exception of the project.
  *
- * @author johnniang
+ * @author mumu
+ * @date   2020/1/12
  */
 public abstract class BaseException extends RuntimeException {
 

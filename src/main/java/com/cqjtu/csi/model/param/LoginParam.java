@@ -4,6 +4,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 
+/**
+ * @author mumu
+ * @date 2020/1/11
+ */
 public class LoginParam {
 
     @NotBlank(message = "登录名不能为空")

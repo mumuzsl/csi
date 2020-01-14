@@ -4,7 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
+/**
+ * @author mumu
+ * @date 2020/1/12
+ */
 public class AuthToken {
 
     /**

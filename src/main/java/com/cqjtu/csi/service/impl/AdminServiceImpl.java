@@ -19,6 +19,10 @@ import org.springframework.util.Assert;
 
 import javax.persistence.NonUniqueResultException;
 
+/**
+ * @author mumu
+ * @date 2020/1/11
+ */
 @Service
 public class AdminServiceImpl implements AdminService {
 
@@ -77,6 +81,10 @@ public class AdminServiceImpl implements AdminService {
         return buildAuthToken(user);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Object logout() {
         UserDetail userDetail = AdminContext.getAdminContext();

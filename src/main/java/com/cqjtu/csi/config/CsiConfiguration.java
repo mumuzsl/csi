@@ -5,6 +5,10 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @author mumu
+ * @date 2020/1/13
+ */
 @Configuration
 public class CsiConfiguration {
 

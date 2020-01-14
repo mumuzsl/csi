@@ -16,6 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * @author mumu
+ * @date 2020/1/12
+ */
 public class AdminFilter extends OncePerRequestFilter {
 
     protected final AntPathMatcher antPathMatcher;

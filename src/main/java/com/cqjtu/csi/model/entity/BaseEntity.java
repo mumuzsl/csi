@@ -5,6 +5,10 @@ import com.cqjtu.csi.utils.DataTimeUtils;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * @author mumu
+ * @date 2020/1/11
+ */
 @MappedSuperclass
 public class BaseEntity {
 

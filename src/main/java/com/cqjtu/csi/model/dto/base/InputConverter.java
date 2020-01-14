@@ -10,7 +10,8 @@ import java.util.Objects;
 /**
  * Converter interface for input DTO.
  *
- * @author johnniang
+ * @author mumu
+ * @date 2020/1/13
  */
 public interface InputConverter<DOMAIN> {
 

@@ -13,9 +13,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Bean utilities.
- *
- * @author johnniang
+ * @author mumu
+ * @date 2020/1/12
  */
 public class BeanUtils {
 

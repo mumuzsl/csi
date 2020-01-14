@@ -5,6 +5,10 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author mumu
+ * @date 2020/1/14
+ */
 public class InMemoryCacheStore implements CacheStore<String, String> {
 
     private final static ConcurrentHashMap<String, String> cacheContainer = new ConcurrentHashMap<>();
