@@ -7,4 +7,6 @@ public interface AdminService {
 
     AuthToken login(LoginParam loginParam);
 
+    Object logout();
+
 }

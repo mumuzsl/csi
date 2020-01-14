@@ -21,6 +21,8 @@ public interface UserService {
 
     void register(UserParam userParam);
 
+    void registerAdmin();
+
     void login(LoginParam loginParam);
 
     Optional<User> getByLoginName(String username);

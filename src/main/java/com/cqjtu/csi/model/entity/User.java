@@ -1,12 +1,14 @@
 package com.cqjtu.csi.model.entity;
 
 
+import cn.hutool.crypto.digest.BCrypt;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,15 +18,11 @@ public class User {
     @Column(name = "login_name", columnDefinition = "varchar(20) not null")
     private String loginName;
 
-    @Column(name = "password", columnDefinition = "varchar(32) not null")
+    @Column(name = "password", columnDefinition = "varchar(255) not null")
     private String password;
 
     @Column(name = "status", columnDefinition = "int(11) default 2")
     private Integer status;
-
-    @Column(name = "create_time", columnDefinition = "timestamp default CURRENT_TIMESTAMP")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createTime;
 
     @Column(name = "username", columnDefinition = "varchar(20) not null")
     private String username;
@@ -34,6 +32,19 @@ public class User {
 
     @Column(name = "facepath")
     private String facepath;
+
+    @Override
+    public void prePersist() {
+        super.prePersist();
+
+        if (password != null) {
+            this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+        }
+
+        if (status == null) {
+            this.status = 2;
+        }
+    }
 
     public Integer getId() {
         return id;
@@ -65,14 +76,6 @@ public class User {
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
     }
 
     public String getUsername() {

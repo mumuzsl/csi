@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.persistence.NonUniqueResultException;
 import java.util.Optional;
 
 @Service
@@ -47,7 +48,16 @@ public class UserServiceImpl extends CrudService<User, Integer> implements UserS
         User user = userParam.convertTo();
 
         userRepository.save(user);
+    }
 
+    @Override
+    public void registerAdmin() {
+        User user = new User();
+        user.setLoginName("root");
+        user.setPassword("1234");
+        user.setUsername("zhao");
+        user.setStatus(1);
+        userRepository.save(user);
     }
 
     @Override

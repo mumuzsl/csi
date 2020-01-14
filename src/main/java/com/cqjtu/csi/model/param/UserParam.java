@@ -10,15 +10,25 @@ import javax.validation.constraints.Size;
 
 public class UserParam implements InputConverter<User> {
 
+    @NotBlank(message = "登录名不能为空")
+    @Size(max = 20, message = "登录名的字符长度不能超过 {max}")
+    private String loginName;
+
     @NotBlank(message = "用户名不能为空")
-    @Size(max = 50, message = "用户名的字符长度不能超过 {max}")
+    @Size(max = 20, message = "用户名的字符长度不能超过 {max}")
     private String username;
 
     @NotBlank(message = "密码不能为空")
-    @Size(min = 8, max = 100, message = "密码的字符长度必须在 {min} - {max} 之间")
+    @Size(min = 4, max = 32, message = "密码的字符长度必须在 {min} - {max} 之间")
     private String password;
 
+    public String getLoginName() {
+        return loginName;
+    }
 
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
 
     public String getUsername() {
         return username;
