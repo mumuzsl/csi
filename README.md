@@ -12,3 +12,27 @@
 - [main](https://github.com/mumuzsl/csi/tree/master/src/main)
 - [resources](https://github.com/mumuzsl/csi/tree/master/src/main/resources)
 - [java/.../csi](https://github.com/mumuzsl/csi/tree/master/src/main/java/com/cqjtu/csi)
+
+# 目录结构
+```
+csi
+├─cache
+├─config
+├─controller
+├─exception
+├─model
+│  ├─dto
+│  │  └─base
+│  ├─entity
+│  └─param
+├─repository
+├─security
+│  ├─context
+│  ├─filter
+│  ├─support
+│  └─token
+├─service
+│  ├─base
+│  └─impl
+└─utils
+```
