@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.EnableCaching;
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication
-@EnableCaching
 public class CsiApplication {
 
     public static void main(String[] args) {
