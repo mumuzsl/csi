@@ -25,7 +25,7 @@ public class UserServiceImpl extends CrudService<User, Integer> implements UserS
 
     private final UserRepository userRepository;
 
-    protected UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         super(userRepository);
         this.userRepository = userRepository;
     }

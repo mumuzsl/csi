@@ -22,6 +22,7 @@ import javax.persistence.NonUniqueResultException;
 /**
  * @author mumu
  * @date 2020/1/11
+ * @see com.cqjtu.csi.service.AdminService
  */
 @Service
 public class AdminServiceImpl implements AdminService {
