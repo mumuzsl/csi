@@ -1,6 +1,6 @@
 package com.cqjtu.csi.service.base;
 
-import com.cqjtu.csi.repository.BaseRepository;
+import com.cqjtu.csi.repository.base.BaseRepository;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.ParameterizedType;
@@ -48,6 +48,5 @@ public abstract class CrudService<DOMAIN, ID> {
     public void delete(DOMAIN domain){
         repository.delete(domain);
     }
-
 
 }

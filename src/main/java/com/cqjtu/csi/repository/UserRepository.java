@@ -1,6 +1,7 @@
 package com.cqjtu.csi.repository;
 
 import com.cqjtu.csi.model.entity.User;
+import com.cqjtu.csi.repository.base.BaseRepository;
 import org.springframework.lang.NonNull;
 
 import java.util.Optional;

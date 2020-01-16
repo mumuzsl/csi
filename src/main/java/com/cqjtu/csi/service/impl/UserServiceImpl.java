@@ -5,7 +5,6 @@ import com.cqjtu.csi.exception.NotFoundException;
 import com.cqjtu.csi.model.entity.User;
 import com.cqjtu.csi.model.param.LoginParam;
 import com.cqjtu.csi.model.param.UserParam;
-import com.cqjtu.csi.repository.BaseRepository;
 import com.cqjtu.csi.repository.UserRepository;
 import com.cqjtu.csi.service.UserService;
 import com.cqjtu.csi.service.base.CrudService;
@@ -13,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import javax.persistence.NonUniqueResultException;
 import java.util.Optional;
 
 /**
