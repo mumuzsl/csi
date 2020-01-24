@@ -8,7 +8,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "facekey")
-public class Facekey extends BaseEntity {
+public class Facekey {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

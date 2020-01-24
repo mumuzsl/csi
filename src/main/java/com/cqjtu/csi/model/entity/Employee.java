@@ -8,44 +8,44 @@ import java.util.Date;
 
 @Entity
 @Table(name = "employee")
-public class Employee extends BaseEntity{
+public class Employee extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
     @Column(name = "dept_id")
-    private Integer dept_id;
+    private Integer deptId;
 
     @Column(name = "job_id")
-    private Integer job_id;
+    private Integer jobId;
 
     @Column(name = "name")
     private String name;
 
-    @Column(name ="card_id")
-    private String card_id;
+    @Column(name = "card_id")
+    private String cardId;
 
-    @Column(name ="address")
+    @Column(name = "address")
     private String address;
 
     @Column(name = "post_code")
-    private String post_code;
+    private String postCode;
 
-    @Column(name ="tel")
+    @Column(name = "tel")
     private String tel;
 
     @Column(name = "phone")
     private String phone;
 
-    @Column(name="qq")
+    @Column(name = "qq")
     private String qq;
 
     @Column(name = "email")
     private String email;
 
-    @Column(name = "sex")
-    private Integer sex;
+    @Column(name = "sex", columnDefinition = "enum('男', '女')")
+    private String sex;
 
     @Column(name = "party")
     private String party;
@@ -56,7 +56,7 @@ public class Employee extends BaseEntity{
     @Column(name = "race")
     private String race;
 
-    @Column(name="education")
+    @Column(name = "education")
     private String education;
 
     @Column(name = "speciality")
@@ -68,9 +68,6 @@ public class Employee extends BaseEntity{
     @Column(name = "remark")
     private String remark;
 
-    @Column(name = "create_date")
-    private Date create_date;
-
     public Integer getId() {
         return id;
     }
@@ -79,20 +76,20 @@ public class Employee extends BaseEntity{
         this.id = id;
     }
 
-    public Integer getDept_id() {
-        return dept_id;
+    public Integer getDeptId() {
+        return deptId;
     }
 
-    public void setDept_id(Integer dept_id) {
-        this.dept_id = dept_id;
+    public void setDeptId(Integer deptId) {
+        this.deptId = deptId;
     }
 
-    public Integer getJob_id() {
-        return job_id;
+    public Integer getJobId() {
+        return jobId;
     }
 
-    public void setJob_id(Integer job_id) {
-        this.job_id = job_id;
+    public void setJobId(Integer jobId) {
+        this.jobId = jobId;
     }
 
     public String getName() {
@@ -103,12 +100,12 @@ public class Employee extends BaseEntity{
         this.name = name;
     }
 
-    public String getCard_id() {
-        return card_id;
+    public String getCardId() {
+        return cardId;
     }
 
-    public void setCard_id(String card_id) {
-        this.card_id = card_id;
+    public void setCardId(String cardId) {
+        this.cardId = cardId;
     }
 
     public String getAddress() {
@@ -119,12 +116,12 @@ public class Employee extends BaseEntity{
         this.address = address;
     }
 
-    public String getPost_code() {
-        return post_code;
+    public String getPostCode() {
+        return postCode;
     }
 
-    public void setPost_code(String post_code) {
-        this.post_code = post_code;
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
     }
 
     public String getTel() {
@@ -159,13 +156,9 @@ public class Employee extends BaseEntity{
         this.email = email;
     }
 
-    public Integer getSex() {
-        return sex;
-    }
+    public String getSex() { return sex; }
 
-    public void setSex(Integer sex) {
-        this.sex = sex;
-    }
+    public void setSex(String sex) { this.sex = sex; }
 
     public String getParty() {
         return party;
@@ -223,11 +216,28 @@ public class Employee extends BaseEntity{
         this.remark = remark;
     }
 
-    public Date getCreate_date() {
-        return create_date;
-    }
-
-    public void setCreate_date(Date create_date) {
-        this.create_date = create_date;
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", deptId=" + deptId +
+                ", jobId=" + jobId +
+                ", name='" + name + '\'' +
+                ", cardId='" + cardId + '\'' +
+                ", address='" + address + '\'' +
+                ", postCode='" + postCode + '\'' +
+                ", tel='" + tel + '\'' +
+                ", phone='" + phone + '\'' +
+                ", qq='" + qq + '\'' +
+                ", email='" + email + '\'' +
+                ", sex='" + sex + '\'' +
+                ", party='" + party + '\'' +
+                ", birthday=" + birthday +
+                ", race='" + race + '\'' +
+                ", education='" + education + '\'' +
+                ", speciality='" + speciality + '\'' +
+                ", hobby='" + hobby + '\'' +
+                ", remark='" + remark + '\'' +
+                '}';
     }
 }

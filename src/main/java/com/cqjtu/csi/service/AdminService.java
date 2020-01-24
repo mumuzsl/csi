@@ -10,8 +10,4 @@ import com.cqjtu.csi.security.token.AuthToken;
  */
 public interface AdminService {
 
-    AuthToken login(LoginParam loginParam);
-
-    Object logout();
-
 }

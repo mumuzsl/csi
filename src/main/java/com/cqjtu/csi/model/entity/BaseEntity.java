@@ -24,6 +24,10 @@ public class BaseEntity {
         this.createTime = createTime;
     }
 
+    /**
+     * 在持久化之前自动填充实体属性
+     *
+     */
     @PrePersist
     protected void prePersist() {
         if (createTime == null) {

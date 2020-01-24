@@ -1,7 +1,5 @@
 package com.cqjtu.csi.security.token;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -13,19 +11,19 @@ public class AuthToken {
     /**
      * Access token.
      */
-    @JSONField(name = "access_token")
+//    @JSONField(name = "access_token")
     private String accessToken;
 
     /**
      * Expired in. (seconds)
      */
-    @JSONField(name = "expired_in")
+//    @JSONField(name = "expired_in")
     private int expiredIn;
 
     /**
      * Refresh token.
      */
-    @JSONField(name = "refresh_token")
+//    @JSONField(name = "refresh_token")
     private String refreshToken;
 
     public String getAccessToken() {

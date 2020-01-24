@@ -1,52 +1,28 @@
 package com.cqjtu.csi.service.base;
 
-import com.cqjtu.csi.repository.base.BaseRepository;
-import org.springframework.util.Assert;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * @author mumu
- * @date 2020/1/12
+ * @date 2020/1/20
+ * @see AbstractCrudService
  */
-public abstract class CrudService<DOMAIN, ID> {
+public interface CrudService<DOMAIN, ID> {
 
-    private final String domainName;
+    List<DOMAIN> listAll();
 
-    private final BaseRepository<DOMAIN, ID> repository;
+    Page<DOMAIN> pageBy(Integer page);
 
-    protected CrudService(BaseRepository<DOMAIN, ID> repository) {
-        this.repository = repository;
+    Page<DOMAIN> pageBy(String page);
 
-        // Get domain name
-        @SuppressWarnings("unchecked")
-        Class<DOMAIN> domainClass = (Class<DOMAIN>) fetchType(0);
-        this.domainName = domainClass.getSimpleName();
-    }
+    Page<DOMAIN> pageBy(Pageable pageable);
 
-    /**
-     * Gets actual generic type.
-     *
-     * @param index generic type index
-     * @return real generic type will be returned
-     */
-    private Type fetchType(int index) {
-        Assert.isTrue(index >= 0 && index <= 1, "type index must be between 0 to 1");
+    DOMAIN getById(ID id);
 
-        return ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[index];
-    }
+    Long Count();
 
-    public DOMAIN insert(DOMAIN domain) {
-        return repository.save(domain);
-    }
-
-    public DOMAIN update(DOMAIN domain) {
-        return repository.saveAndFlush(domain);
-    }
-
-    public void delete(DOMAIN domain){
-        repository.delete(domain);
-    }
-
+    Page search(DOMAIN keyword, Pageable pageable);
 }

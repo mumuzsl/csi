@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "document")
-public class Document extends BaseEntity{
+public class Document extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -24,9 +24,6 @@ public class Document extends BaseEntity{
 
     @Column(name = "remark")
     private String remark;
-
-    @Column(name = "create_date")
-    private Date create_date;
 
     @Column(name = "user_id")
     private Integer user_id;
@@ -61,14 +58,6 @@ public class Document extends BaseEntity{
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public Date getCreate_date() {
-        return create_date;
-    }
-
-    public void setCreate_date(Date create_date) {
-        this.create_date = create_date;
     }
 
     public Integer getUser_id() {

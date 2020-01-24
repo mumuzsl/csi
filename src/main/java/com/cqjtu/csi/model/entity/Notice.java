@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "notice")
-public class Notice extends BaseEntity{
+public class Notice extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -22,11 +22,8 @@ public class Notice extends BaseEntity{
     @Column(name = "content")
     private String content;
 
-    @Column(name = "create_date")
-    private Date create_date;
-
     @Column(name = "user_id")
-    private Integer user_id;
+    private Integer userId;
 
     public Integer getId() {
         return id;
@@ -52,19 +49,11 @@ public class Notice extends BaseEntity{
         this.content = content;
     }
 
-    public Date getCreate_date() {
-        return create_date;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setCreate_date(Date create_date) {
-        this.create_date = create_date;
-    }
-
-    public Integer getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

@@ -10,7 +10,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "job")
-public class Job extends BaseEntity{
+public class Job {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
