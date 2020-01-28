@@ -25,10 +25,7 @@ public class JobServiceImpl extends AbstractCrudService<Job, Integer> implements
     }
 
     @Override
-    public Page search(String keyword, Pageable pageable) {
-        Long first = pageable.getOffset();
-        Integer size = pageable.getPageSize();
-        List content = jobRepository.search(keyword, first, size);
-        return new PageImpl(content, pageable, jobRepository.countByName(keyword));
+    public Page<Job> search(String keyword, Pageable pageable) {
+        return jobRepository.findByNameContaining(keyword, pageable);
     }
 }

@@ -28,14 +28,16 @@ public class PageUtils {
     }
 
     public static Integer safe(Integer page) {
-        if (page < 0)
+        if (page < 0) {
             throw new BadRequestException("页码小于0");
+        }
         return page;
     }
 
     public static Integer safe(Integer page, Integer total) {
-        if (safe(page) > total)
+        if (safe(page) > total) {
             throw new BadRequestException("页码大于总页数");
+        }
         return page;
     }
 }

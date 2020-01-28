@@ -1,18 +1,32 @@
 package com.cqjtu.csi.service.base;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.PageUtil;
 import com.alibaba.druid.sql.PagerUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.cqjtu.csi.exception.NotFoundException;
 import com.cqjtu.csi.repository.base.BaseRepository;
+import com.cqjtu.csi.utils.BaseUtils;
+import com.cqjtu.csi.utils.BeanUtils;
 import com.cqjtu.csi.utils.PageUtils;
+import com.cqjtu.csi.utils.ReflectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import sun.rmi.runtime.Log;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author mumu
@@ -21,16 +35,13 @@ import java.util.List;
 public abstract class AbstractCrudService<DOMAIN, ID> implements CrudService<DOMAIN, ID> {
 
     private final String domainName;
-
+    private final Class<?> domainClass;
     private final BaseRepository<DOMAIN, ID> repository;
 
     protected AbstractCrudService(BaseRepository<DOMAIN, ID> repository) {
         this.repository = repository;
-
-        // Get domain name
-        @SuppressWarnings("unchecked")
-        Class<DOMAIN> domainClass = (Class<DOMAIN>) fetchType(0);
-        domainName = domainClass.getSimpleName();
+        this.domainClass = (Class<DOMAIN>) fetchType(0);
+        this.domainName = domainClass.getSimpleName();
     }
 
     /**
@@ -45,15 +56,46 @@ public abstract class AbstractCrudService<DOMAIN, ID> implements CrudService<DOM
         return ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[index];
     }
 
+//    @Override
+//    public DOMAIN insertByJson(String json) {
+//        return insert((DOMAIN) JSON.parseObject(json, domainClass));
+//    }
+//
+//    @Override
+//    public DOMAIN updateByJson(String json) {
+//        return update((DOMAIN) JSON.parseObject(json, domainClass));
+//    }
+
+    @Override
+    public void removeInBetch(Collection<ID> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return;
+        }
+
+        repository.deleteByIdIn(ids);
+    }
+
+    @Override
+    @Transactional
+    public void removeById(ID id) {
+        repository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
     public DOMAIN insert(DOMAIN domain) {
         return repository.save(domain);
     }
 
+    @Override
+    @Transactional
     public DOMAIN update(DOMAIN domain) {
         return repository.saveAndFlush(domain);
     }
 
-    public void delete(DOMAIN domain) {
+    @Override
+    @Transactional
+    public void remove(DOMAIN domain) {
         repository.delete(domain);
     }
 
@@ -74,22 +116,33 @@ public abstract class AbstractCrudService<DOMAIN, ID> implements CrudService<DOM
 
     @Override
     public DOMAIN getById(ID id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("为找到数据"));
     }
 
     @Override
-    public Long Count() {
+    public Long count() {
         return repository.count();
-    }
-
-    @Override
-    public Page search(DOMAIN domain, Pageable pageable) {
-        Example<DOMAIN> example = Example.of(domain);
-        return repository.findAll(example, pageable);
     }
 
     @Override
     public List<DOMAIN> listAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public Page<DOMAIN> search(String keyword, Pageable pageable) {
+        return search(BaseUtils.oneKeyValueMap(keyword, "name"), pageable);
+    }
+
+    @Override
+    public Page<DOMAIN> search(Map map, Pageable pageable) {
+        Class<DOMAIN> domainClass = (Class<DOMAIN>) fetchType(0);
+        Object key = BeanUtil.mapToBean(map, domainClass, true);
+        return search((DOMAIN) key, pageable);
+    }
+
+    @Override
+    public Page<DOMAIN> search(DOMAIN key, Pageable pageable) {
+        return repository.findAll(Example.of(key), pageable);
     }
 }

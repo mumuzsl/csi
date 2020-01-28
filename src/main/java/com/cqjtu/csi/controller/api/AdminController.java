@@ -31,6 +31,5 @@ public class AdminController {
     public Object add(@RequestBody @Valid UserParam userParam) {
         return null;
     }
-//    @PostMapping(value = "register")
-//    public Integer register(@RequestBody @Valid UserService )
+
 }

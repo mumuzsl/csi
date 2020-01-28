@@ -26,6 +26,7 @@ public interface DeptRepository extends BaseRepository<Dept, Integer> {
      * @param id
      * @return Dept
      */
+    @Override
     @NonNull
     Optional<Dept> findById(@NonNull Integer id);
 
@@ -36,7 +37,7 @@ public interface DeptRepository extends BaseRepository<Dept, Integer> {
      * @return Dept
      */
     @NonNull
-    Page<Dept> findByNameContaining(@NonNull String name, Pageable pageable);
+    Page<Dept> findByNameContaining(@NonNull String name, @NonNull Pageable pageable);
 
     @Query(value = "select * from dept where dept.name like concat('%',:name,'%') limit :first, :size", nativeQuery = true)
     List search(@Param("name") String name, @Param("first") Long first, @Param("size") Integer size);

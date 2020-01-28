@@ -2,6 +2,8 @@ package com.cqjtu.csi.repository;
 
 import com.cqjtu.csi.model.entity.Document;
 import com.cqjtu.csi.repository.base.BaseRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -18,6 +20,7 @@ public interface DocumentRepository extends BaseRepository<Document, Integer> {
      *
      * @return List
      */
+    @Override
     List<Document> findAll();
 
     /**
@@ -26,6 +29,7 @@ public interface DocumentRepository extends BaseRepository<Document, Integer> {
      * @param id
      * @return Document
      */
+    @Override
     @NonNull
     Optional<Document> findById(@NonNull Integer id);
 
@@ -36,5 +40,5 @@ public interface DocumentRepository extends BaseRepository<Document, Integer> {
      * @return Document
      */
     @NonNull
-    Optional<Document> findByFilename(@NonNull String title);
+    Page<Document> findByTitleContaining(@NonNull String title, @NonNull Pageable pageable);
 }

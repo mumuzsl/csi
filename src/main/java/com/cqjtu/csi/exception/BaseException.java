@@ -25,6 +25,11 @@ public abstract class BaseException extends RuntimeException {
         super(message, cause);
     }
 
+    /**
+     * 返回该异常的http状态码。
+     *
+     * @return http 状态码
+     */
     @NonNull
     public abstract HttpStatus getStatus();
 

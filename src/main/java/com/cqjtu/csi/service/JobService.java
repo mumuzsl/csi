@@ -10,7 +10,4 @@ import org.springframework.data.domain.Pageable;
  * @date 2020/1/20
  */
 public interface JobService extends CrudService<Job, Integer> {
-
-    Page search(String keyword, Pageable pageable);
-
 }

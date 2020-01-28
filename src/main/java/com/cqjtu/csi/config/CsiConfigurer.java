@@ -1,9 +1,9 @@
 package com.cqjtu.csi.config;
 
-import com.cqjtu.csi.core.support.CsiConst;
+import com.cqjtu.csi.core.CsiConst;
 import com.cqjtu.csi.security.filter.RequestFilter;
 import com.cqjtu.csi.security.filter.RoleFilter;
-import com.cqjtu.csi.security.interceptor.LoginInterceptor;
+import com.cqjtu.csi.service.TokenService;
 import com.cqjtu.csi.service.UserService;
 import freemarker.core.TemplateClassResolver;
 import freemarker.template.TemplateException;
@@ -28,37 +28,44 @@ public class CsiConfigurer implements WebMvcConfigurer {
 
     private static final String FILE_PROTOCOL = "file:///";
 
-//    @Bean
-//    public FilterRegistrationBean<RequestFilter> requestFilter() {
-//        RequestFilter requestFilter = new RequestFilter();
-//        requestFilter.addExcludeUrlPatterns(
-//                "/login"
-//        );
-//
-//        FilterRegistrationBean<RequestFilter> filterRegistrationBean = new FilterRegistrationBean<>();
-//        filterRegistrationBean.setFilter(requestFilter);
-//        filterRegistrationBean.addUrlPatterns(
-//                "/*"
-//        );
-//        filterRegistrationBean.setOrder(0);
-//
-//        return filterRegistrationBean;
-//    }
-//
-//    @Bean
-//    public FilterRegistrationBean<RoleFilter> adminFilter(UserService userService) {
-//        RoleFilter adminFilter = new RoleFilter(userService);
-//
-//        FilterRegistrationBean<RoleFilter> filterRegistrationBean = new FilterRegistrationBean<>();
-//        filterRegistrationBean.setFilter(adminFilter);
-//        filterRegistrationBean.addUrlPatterns(
-//                "/dpt/a/*",
-//                "/dpt/a/*"
-//        );
-//        filterRegistrationBean.setOrder(1);
-//
-//        return filterRegistrationBean;
-//    }
+    @Bean
+    public FilterRegistrationBean<RequestFilter> requestFilter(TokenService tokenService) {
+        RequestFilter requestFilter = new RequestFilter(tokenService);
+        requestFilter.addExcludeUrlPatterns(
+                "/login",
+                "/logout",
+                "/register"
+        );
+
+        FilterRegistrationBean<RequestFilter> filterRegistrationBean = new FilterRegistrationBean<>();
+        filterRegistrationBean.setFilter(requestFilter);
+        filterRegistrationBean.addUrlPatterns(
+                "/*"
+        );
+        filterRegistrationBean.setOrder(0);
+
+        return filterRegistrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean<RoleFilter> adminFilter(UserService userService,
+                                                          TokenService tokenService) {
+        RoleFilter adminFilter = new RoleFilter(userService, tokenService);
+
+        FilterRegistrationBean<RoleFilter> filterRegistrationBean = new FilterRegistrationBean<>();
+        filterRegistrationBean.setFilter(adminFilter);
+        filterRegistrationBean.addUrlPatterns(
+                "/dpt/a/*",
+                "/document/a/*",
+                "/employee/a/*",
+                "/job/a/*",
+                "/notice/a/*",
+                "/user/a/*"
+        );
+        filterRegistrationBean.setOrder(1);
+
+        return filterRegistrationBean;
+    }
 
     /**
      * 配置静态资源

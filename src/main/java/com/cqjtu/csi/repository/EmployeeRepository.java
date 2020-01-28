@@ -18,6 +18,7 @@ public interface EmployeeRepository extends BaseRepository<Employee, Integer> {
      *
      * @return List
      */
+    @Override
     List<Employee> findAll();
 
     /**
@@ -26,6 +27,7 @@ public interface EmployeeRepository extends BaseRepository<Employee, Integer> {
      * @param id
      * @return Employee
      */
+    @Override
     @NonNull
     Optional<Employee> findById(@NonNull Integer id);
 

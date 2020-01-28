@@ -16,7 +16,7 @@ public class Facekey {
     private Integer id;
 
     @Column(name = "appID")
-    private String appID;
+    private String appId;
 
     @Column(name = "apiKey")
     private String apiKey;
@@ -35,12 +35,12 @@ public class Facekey {
         this.id = id;
     }
 
-    public String getAppID() {
-        return appID;
+    public String getAppId() {
+        return appId;
     }
 
-    public void setAppID(String appID) {
-        this.appID = appID;
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
 
     public String getApiKey() {

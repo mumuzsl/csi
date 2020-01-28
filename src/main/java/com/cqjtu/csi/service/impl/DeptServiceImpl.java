@@ -28,7 +28,8 @@ public class DeptServiceImpl extends AbstractCrudService<Dept, Integer> implemen
     }
 
     @Override
-    public Page search(String keyword, Pageable pageable) {
+    public Page<Dept> search(String keyword, Pageable pageable) {
         return deptRepository.findByNameContaining(keyword, pageable);
     }
+
 }

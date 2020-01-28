@@ -2,22 +2,13 @@ package com.cqjtu.csi.core;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.math.MathUtil;
-import com.alibaba.fastjson.JSON;
 import com.baidu.aip.face.AipFace;
 import com.baidu.aip.face.MatchRequest;
-import com.cqjtu.csi.core.support.CsiConst;
-import com.cqjtu.csi.exception.BadRequestException;
-import com.cqjtu.csi.exception.BaseException;
 import com.cqjtu.csi.exception.FaceClientException;
 import com.cqjtu.csi.utils.BaseUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.http.HttpStatus;
 
 import java.io.BufferedInputStream;
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -46,18 +37,18 @@ public class FaceClient {
     private static final String APP_ID = "18334413";
     private static final String API_KEY = "AH3gNZ64HPyey69dVa768u10";
     private static final String SECRET_KEY = "LkhLPpkpnuwzQttNdLMoy6vOgsAbKyBl";
-    private static final AipFace client = new AipFace(APP_ID, API_KEY, SECRET_KEY);
-    private static final HashMap<String, String> options = new HashMap<>();
-    private static final Map<String, String> msgMap = new HashMap<>();
+    private static final AipFace CLENT = new AipFace(APP_ID, API_KEY, SECRET_KEY);
+    private static final HashMap<String, String> OPTIONS = new HashMap<>();
+    private static final Map<String, String> MSG_MAP = new HashMap<>();
     private static final Float DEFAULT_SCORE = 92f;
     private static final String GROUP = "user";
     private static final String IMAGE_TYPE = "BASE64";
 
     static {
-        options.put("liveness_control", "NORMAL");
+        OPTIONS.put("liveness_control", "NORMAL");
 
-        msgMap.put("222202", "图片中没有人脸");
-        msgMap.put("222203", "无法解析人脸");
+        MSG_MAP.put("222202", "图片中没有人脸");
+        MSG_MAP.put("222203", "无法解析人脸");
     }
 
     public FaceClient newInstance() {
@@ -71,7 +62,7 @@ public class FaceClient {
      * @return
      */
     public static JSONObject search(String base64) {
-        JSONObject jsonObject = client.search(base64, IMAGE_TYPE, GROUP, options);
+        JSONObject jsonObject = CLENT.search(base64, IMAGE_TYPE, GROUP, OPTIONS);
         return Optional.ofNullable(jsonObject)
                 .map(object -> check(object))
                 .map(integer -> jsonObject.has(RESULT))
@@ -121,7 +112,7 @@ public class FaceClient {
         requests.add(req1);
         requests.add(req2);
 
-        JSONObject res = client.match(requests);
+        JSONObject res = CLENT.match(requests);
         System.out.println(res.toString(2));
 
         return false;
@@ -142,7 +133,7 @@ public class FaceClient {
      * @return 百度api返回的face_token
      */
     public static String addFace(Integer id, String base64) {
-        JSONObject res = client.addUser(base64, IMAGE_TYPE, GROUP, String.valueOf(id), options);
+        JSONObject res = CLENT.addUser(base64, IMAGE_TYPE, GROUP, String.valueOf(id), OPTIONS);
         System.out.println(res.toString());
         return getString(check(res), FACE_TOKEN);
     }
@@ -164,7 +155,7 @@ public class FaceClient {
                 .map(b -> b ? jsonObject.getInt(ERR_CODE) : -1)
                 .map(integer -> integer != 0 ? null : jsonObject)
                 .orElseThrow(() ->
-                        new FaceClientException(ERROR_MSG_HEADER + msgMap.get(getString(jsonObject, ERR_CODE)))
+                        new FaceClientException(ERROR_MSG_HEADER + MSG_MAP.get(getString(jsonObject, ERR_CODE)))
                                 .setErrorData(jsonObject));
     }
 }

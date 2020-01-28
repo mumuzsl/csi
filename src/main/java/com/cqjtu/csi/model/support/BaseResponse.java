@@ -72,7 +72,7 @@ public class BaseResponse<T> implements Serializable {
      *
      * @param data
      */
-    public void setData2JSON(Object data) {
+    public void setDataToJSON(Object data) {
         setData(JSON.toJSON(data));
     }
 

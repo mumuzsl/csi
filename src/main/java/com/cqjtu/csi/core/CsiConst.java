@@ -1,4 +1,4 @@
-package com.cqjtu.csi.core.support;
+package com.cqjtu.csi.core;
 
 /**
  * @author mumu
@@ -9,7 +9,7 @@ public class CsiConst {
     /**
      * 获取用户目录路径
      */
-    public final static String USER_HOME = System.getProperties().getProperty("user.home");
+    public static final String USER_HOME = System.getProperties().getProperty("user.home");
 
     public static final String SUCCESS = "成功";
 
@@ -36,6 +36,8 @@ public class CsiConst {
     public static final String SUFFIX_FACE = ".face";
 
     public static final String FACE_FILE_FORMAT = IMG_DIR + "/{0}" + SUFFIX_FACE;
+
+    public static final int ACCESS_TOKEN_EXPIRED_SECONDS = 24 * 3600;
 
     public static String toFacePath(String name) {
         return String.format(FACE_FILE_FORMAT, name);

@@ -2,6 +2,8 @@ package com.cqjtu.csi.repository;
 
 import com.cqjtu.csi.model.entity.Job;
 import com.cqjtu.csi.repository.base.BaseRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
@@ -21,6 +23,7 @@ public interface JobRepository extends BaseRepository<Job, Integer> {
      *
      * @return List
      */
+    @Override
     List<Job> findAll();
 
     /**
@@ -29,6 +32,7 @@ public interface JobRepository extends BaseRepository<Job, Integer> {
      * @param id
      * @return Job
      */
+    @Override
     @NonNull
     Optional<Job> findById(@NonNull Integer id);
 
@@ -40,6 +44,9 @@ public interface JobRepository extends BaseRepository<Job, Integer> {
      */
     @NonNull
     Optional<Job> findByName(@NonNull String name);
+
+    @NonNull
+    Page<Job> findByNameContaining(@NonNull String name, @NonNull Pageable pageable);
 
     @Query(value = "select * from dept where job.name like concat('%',:name,'%') limit :first, :size", nativeQuery = true)
     List search(@Param("name") String name, @Param("first") Long first, @Param("size") Integer size);

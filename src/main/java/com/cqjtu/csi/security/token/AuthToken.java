@@ -1,5 +1,6 @@
 package com.cqjtu.csi.security.token;
 
+import com.cqjtu.csi.model.entity.Token;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -11,20 +12,25 @@ public class AuthToken {
     /**
      * Access token.
      */
-//    @JSONField(name = "access_token")
     private String accessToken;
 
     /**
      * Expired in. (seconds)
      */
-//    @JSONField(name = "expired_in")
     private int expiredIn;
 
     /**
      * Refresh token.
      */
-//    @JSONField(name = "refresh_token")
     private String refreshToken;
+
+    public AuthToken() { }
+
+    public AuthToken(Token token) {
+        this.accessToken = token.getToken();
+        this.expiredIn = token.getExpiredIn();
+        this.refreshToken = token.getRefreshToken();
+    }
 
     public String getAccessToken() {
         return accessToken;

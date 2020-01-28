@@ -2,6 +2,8 @@ package com.cqjtu.csi.repository;
 
 import com.cqjtu.csi.model.entity.Notice;
 import com.cqjtu.csi.repository.base.BaseRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -18,6 +20,7 @@ public interface NoticeRepository extends BaseRepository<Notice, Integer> {
      *
      * @return List
      */
+    @Override
     List<Notice> findAll();
 
     /**
@@ -26,6 +29,7 @@ public interface NoticeRepository extends BaseRepository<Notice, Integer> {
      * @param id
      * @return Job
      */
+    @Override
     @NonNull
     Optional<Notice> findById(@NonNull Integer id);
 
@@ -37,4 +41,10 @@ public interface NoticeRepository extends BaseRepository<Notice, Integer> {
      */
     @NonNull
     Optional<Notice> findByTitle(@NonNull String name);
+
+    /**
+     * @return
+     */
+    @NonNull
+    Page<Notice> findByTitleContainingAndContentContaining(@NonNull String title, @NonNull String content, @NonNull Pageable pageable);
 }

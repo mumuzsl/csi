@@ -4,9 +4,13 @@ import com.cqjtu.csi.cache.CacheStore;
 import com.cqjtu.csi.cache.InMemoryCacheStore;
 import com.cqjtu.csi.exception.AuthenticationException;
 import com.cqjtu.csi.exception.BadRequestException;
+import com.cqjtu.csi.model.entity.Token;
 import com.cqjtu.csi.model.entity.User;
 import com.cqjtu.csi.security.token.AuthToken;
+import com.cqjtu.csi.service.TokenService;
 import com.cqjtu.csi.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.util.AntPathMatcher;
@@ -19,20 +23,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * @author mumu
  * @date 2020/1/22
  */
 public abstract class AbstractFilter extends OncePerRequestFilter {
-
+    protected final Logger log = LoggerFactory.getLogger(RequestFilter.class);
     protected final AntPathMatcher antPathMatcher;
     protected final CacheStore<String, String> cacheStore;
     protected Set<String> excludeUrlPatterns = new HashSet<>(2);
+    protected final TokenService tokenService;
 
-    public AbstractFilter() {
+    public AbstractFilter(TokenService tokenService) {
         this.antPathMatcher = new AntPathMatcher();
         this.cacheStore = new InMemoryCacheStore();
+        this.tokenService = tokenService;
     }
 
     public void addExcludeUrlPatterns(@NonNull String... excludeUrlPatterns) {
@@ -49,17 +56,22 @@ public abstract class AbstractFilter extends OncePerRequestFilter {
     }
 
     String getToken(HttpServletRequest request) {
-        String path = request.getServletPath();
-        System.out.println(path);
+        log.info("request path: {}", request.getServletPath());
 
         String token = request.getHeader("token");
-        System.out.println(token);
+        System.out.println("he");
 
-        Map map = request.getParameterMap();
-        map.forEach((key, value) -> {
-            System.out.println(key + "：" + value);
+        request.getParameterMap().forEach((key, value) -> {
+            log.info("{} : {}", key, String.join(",", value));
         });
 
         return token;
+    }
+
+    protected abstract void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        doFilter(request, response, filterChain);
     }
 }

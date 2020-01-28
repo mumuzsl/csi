@@ -11,7 +11,4 @@ import org.springframework.data.domain.Pageable;
  * @date 2020/1/20
  */
 public interface EmployeeService extends CrudService<Employee, Integer> {
-
-    Page search(String json, Pageable pageable);
-
 }

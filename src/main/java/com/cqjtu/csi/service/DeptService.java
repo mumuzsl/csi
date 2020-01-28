@@ -12,7 +12,4 @@ import org.springframework.data.domain.Pageable;
  * @see com.cqjtu.csi.service.impl.DeptServiceImpl
  */
 public interface DeptService extends CrudService<Dept, Integer> {
-
-    Page search(String keyword, Pageable pageable);
-
 }

@@ -2,8 +2,11 @@ package com.cqjtu.csi.security.filter;
 
 import com.cqjtu.csi.exception.AuthenticationException;
 import com.cqjtu.csi.exception.BadRequestException;
+import com.cqjtu.csi.service.TokenService;
 import com.cqjtu.csi.service.UserService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -19,15 +22,19 @@ import java.util.Optional;
  */
 public class RequestFilter extends AbstractFilter {
 
+    public RequestFilter(TokenService tokenService) {
+        super(tokenService);
+    }
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = getToken(request);
 
         if (StringUtils.isBlank(token)) {
             throw new BadRequestException("请求中不包含token");
         }
 
-        System.out.println(request.getContentType());
         filterChain.doFilter(request, response);
     }
+
 }

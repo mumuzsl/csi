@@ -1,5 +1,6 @@
 package com.cqjtu.csi.repository;
 
+import com.cqjtu.csi.exception.BaseException;
 import com.cqjtu.csi.model.entity.User;
 import com.cqjtu.csi.repository.base.BaseRepository;
 import org.hibernate.annotations.SQLUpdate;
@@ -10,8 +11,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -41,9 +42,9 @@ public interface UserRepository extends BaseRepository<User, Integer> {
     Page<User> findByUsernameContainingAndStatusEquals(String loginName, Integer status, Pageable pageable);
 
     @NonNull
-    Page<User> findByUsernameContaining(String username, Pageable pageable);
+    Page<User> findByUsernameContaining(@NonNull String username, @NonNull Pageable pageable);
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Modifying
     @Query(value = "UPDATE `user` SET `facepath` = :path WHERE `id` = :id", nativeQuery = true)
     void updateFacepath(@Param("id") Integer id, @Param("path") String path);

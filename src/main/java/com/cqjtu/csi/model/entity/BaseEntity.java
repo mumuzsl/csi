@@ -1,6 +1,6 @@
 package com.cqjtu.csi.model.entity;
 
-import com.cqjtu.csi.utils.DataTimeUtils;
+import com.cqjtu.csi.utils.DateTimeUtils;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -31,7 +31,7 @@ public class BaseEntity {
     @PrePersist
     protected void prePersist() {
         if (createTime == null) {
-            createTime = DataTimeUtils.now();
+            createTime = DateTimeUtils.now();
         }
     }
 

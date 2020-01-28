@@ -1,5 +1,6 @@
 package com.cqjtu.csi.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.cqjtu.csi.model.dto.EmployeeDTO;
 import com.cqjtu.csi.model.entity.Employee;
 import com.cqjtu.csi.repository.EmployeeRepository;
@@ -25,12 +26,7 @@ public class EmployeeServiceImpl extends AbstractCrudService<Employee, Integer> 
     }
 
     @Override
-    public Page search(String json, Pageable pageable) {
-//        EmployeeDTO employeeDTO = JSONObject.parseObject(json, EmployeeDTO.class);
-//        System.out.println(employeeDTO.toString());
-//        Employee employee = employeeDTO.convertTo();
-//        System.out.println(employee.toString());
-//        return employeeRepository.findAll(Example.of(employee), pageable);
-        return null;
+    public Page<Employee> search(String keyword, Pageable pageable) {
+        return search(JSON.parseObject(keyword, Employee.class), pageable);
     }
 }

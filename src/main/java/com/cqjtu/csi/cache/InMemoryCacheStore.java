@@ -11,22 +11,22 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class InMemoryCacheStore implements CacheStore<String, String> {
 
-    private final static ConcurrentHashMap<String, String> cacheContainer = new ConcurrentHashMap<>();
+    private final static ConcurrentHashMap<String, String> CACHE_CONTAINER = new ConcurrentHashMap<>();
 
     @Override
 
     public Optional<String> get(String key) {
-        return Optional.ofNullable(cacheContainer.get(key));
+        return Optional.ofNullable(CACHE_CONTAINER.get(key));
     }
 
     @Override
     public void put(String key, String value) {
-        cacheContainer.put(key, value);
+        CACHE_CONTAINER.put(key, value);
     }
 
     @Override
     public void delete(String key) {
-        cacheContainer.remove(key);
+        CACHE_CONTAINER.remove(key);
     }
 
 }

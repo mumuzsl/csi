@@ -26,7 +26,7 @@ public class Document extends BaseEntity {
     private String remark;
 
     @Column(name = "user_id")
-    private Integer user_id;
+    private Integer userId;
 
     public Integer getId() {
         return id;
@@ -60,11 +60,11 @@ public class Document extends BaseEntity {
         this.remark = remark;
     }
 
-    public Integer getUser_id() {
-        return user_id;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

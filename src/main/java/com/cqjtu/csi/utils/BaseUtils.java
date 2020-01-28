@@ -2,13 +2,16 @@ package com.cqjtu.csi.utils;
 
 import cn.hutool.crypto.digest.DigestAlgorithm;
 import cn.hutool.crypto.digest.Digester;
-import com.cqjtu.csi.core.support.CsiConst;
+import com.cqjtu.csi.core.role.Role;
 import com.cqjtu.csi.exception.BadRequestException;
+import com.cqjtu.csi.model.entity.Token;
 import com.cqjtu.csi.model.support.BaseResponse;
+import com.cqjtu.csi.security.token.AuthToken;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -28,12 +31,23 @@ public class BaseUtils {
     }
 
     public static Integer userStatus(String status) {
-        if (status.equals("1"))
+        if (Role.ADMIN.compare(status)) {
             return 1;
-        else if (status.equals("2"))
+        } else if (Role.NORMAL.compare(status)) {
             return 2;
-        else
+        } else {
             throw new BadRequestException("未知权限种类");
+        }
+    }
+
+    public static Map<String, Object> oneKeyValueMap(String key, String value) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(key, value);
+        return map;
+    }
+
+    private static boolean compareIntAndStr(Integer i, String s) {
+        return String.valueOf(i).equals(s);
     }
 
     public static BaseResponse insertSucceed() {

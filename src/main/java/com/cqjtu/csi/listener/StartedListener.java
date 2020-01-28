@@ -2,6 +2,8 @@ package com.cqjtu.csi.listener;
 
 import com.cqjtu.csi.exception.NotFoundException;
 import com.cqjtu.csi.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
@@ -18,26 +20,30 @@ import javax.persistence.NonUniqueResultException;
 @Configuration
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class StartedListener implements ApplicationListener<ApplicationStartedEvent> {
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
+
+    private final Logger log = LoggerFactory.getLogger(StartedListener.class);
+
+    public StartedListener(UserService userService) {this.userService = userService;}
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
-        this.initAdminInDB();
+        this.initAdminInDataBase();
     }
 
-    private void initAdminInDB() {
+    private void initAdminInDataBase() {
         try {
-            System.out.println("check admin...");
+            log.info("check admin...");
             userService.getByLoginNameOfNonNull("root");
-            System.out.println("admin exists.");
+            log.info("admin exists.");
         } catch (NonUniqueResultException e) {
-            System.out.println("admin not only, place delete admin info in db.");
+            log.info("admin not only, place delete admin info in db.");
         } catch (NotFoundException e) {
-            System.out.println("admin not exists.");
-            System.out.println("create admin...");
+            log.info("admin not exists.");
+            log.info("create admin...");
             userService.registerAdmin();
-            System.out.println("create admin finish.");
+            log.info("create admin finish.");
         }
     }
 }

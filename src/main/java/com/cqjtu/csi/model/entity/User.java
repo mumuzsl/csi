@@ -19,7 +19,7 @@ public class User extends BaseEntity {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "login_name", columnDefinition = "varchar(20) not null")
+    @Column(name = "login_name", columnDefinition = "varchar(20) not null unique")
     private String loginName;
 
     @Column(name = "password", columnDefinition = "varchar(255) not null")

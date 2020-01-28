@@ -4,11 +4,10 @@ import cn.hutool.crypto.digest.BCrypt;
 import com.cqjtu.csi.cache.CacheStore;
 import com.cqjtu.csi.cache.InMemoryCacheStore;
 import com.cqjtu.csi.core.FaceClient;
-import com.cqjtu.csi.core.support.CsiConst;
-import com.cqjtu.csi.exception.AuthenticationException;
+import com.cqjtu.csi.core.CsiConst;
 import com.cqjtu.csi.exception.BadRequestException;
-import com.cqjtu.csi.exception.BaseException;
 import com.cqjtu.csi.exception.NotFoundException;
+import com.cqjtu.csi.model.entity.Token;
 import com.cqjtu.csi.model.entity.User;
 import com.cqjtu.csi.model.param.LoginParam;
 import com.cqjtu.csi.model.param.UserParam;
@@ -18,19 +17,18 @@ import com.cqjtu.csi.security.context.AdminContext;
 import com.cqjtu.csi.security.support.UserDetail;
 import com.cqjtu.csi.security.support.UserStatus;
 import com.cqjtu.csi.security.token.AuthToken;
+import com.cqjtu.csi.service.TokenService;
 import com.cqjtu.csi.service.UserService;
 import com.cqjtu.csi.service.base.AbstractCrudService;
 import com.cqjtu.csi.utils.BaseUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -46,12 +44,14 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
     private final static int ACCESS_TOKEN_EXPIRED_SECONDS = 60;
     private final static String MISMACTH_TIP = "用户名或者密码不正确";
     private final UserRepository userRepository;
+    private final TokenService tokenService;
     private final CacheStore<String, String> cacheStore;
 
-    protected UserServiceImpl(UserRepository userRepository) {
+    protected UserServiceImpl(UserRepository userRepository, TokenService tokenService) {
         super(userRepository);
         this.userRepository = userRepository;
         this.cacheStore = new InMemoryCacheStore();
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -70,7 +70,6 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
     @Override
     public BaseResponse addFace(Integer id, String base64) {
         String faceToken = FaceClient.addFace(id, base64);
-//        userRepository.updateFacepath(id, faceToken);
         return BaseResponse.ok(CsiConst.FACE_ADD_SUCCESS);
     }
 
@@ -95,8 +94,10 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
 
         AdminContext.setAdminContext(new UserDetail(user, UserStatus.LOGIN));
 
-        // Generate new token
-        return buildAuthToken(user);
+        Token token = tokenService.createToken(user.getId());
+
+        // Generate new AuthToken
+        return new AuthToken(token);
     }
 
     /**
@@ -115,6 +116,20 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
         cacheStore.delete(userDetail.toKey());
 
         return "logout seccuud";
+    }
+
+    @Override
+    public Object logout(Integer id, AuthToken authToken) {
+        Integer userId = userRepository.findById(id)
+                .map(User::getId)
+                .orElseThrow(() -> new NotFoundException("没有找到该用户"));
+
+        return null;
+    }
+
+    @Override
+    public void logout(AuthToken authToken) {
+        tokenService.clearToken(authToken.getAccessToken());
     }
 
     @Override
@@ -153,10 +168,12 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
     }
 
     @Override
-    public Page search(String keyword, String status, Pageable pageable) {
-        return status.equals("0") ?
-                userRepository.findByUsernameContaining(keyword, pageable) :
-                userRepository.findByUsernameContainingAndStatusEquals(keyword, BaseUtils.userStatus(status), pageable);
+    public Page<User> search(String keyword, String status, Pageable pageable) {
+        return userRepository.findByUsernameContainingAndStatusEquals(
+                keyword,
+                BaseUtils.userStatus(status),
+                pageable
+        );
     }
 
     /**
@@ -181,4 +198,6 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
 
         return token;
     }
+
+
 }

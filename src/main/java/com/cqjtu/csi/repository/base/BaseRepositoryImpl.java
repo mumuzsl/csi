@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author mumu
@@ -18,6 +20,9 @@ public class BaseRepositoryImpl<DOMAIN, ID> extends SimpleJpaRepository<DOMAIN, 
     private final JpaEntityInformation<DOMAIN, ID> entityInformation;
     private final EntityManager entityManager;
 
+    // 这个地方IDEA可能报错，不影响程序运行，可以不用管它
+    // 具体原因还未找到
+    // idea error: could not autowire.no beans of 'jpaentityinformation<domain,id>' type found
     public BaseRepositoryImpl(JpaEntityInformation<DOMAIN, ID> entityInformation, EntityManager entityManager) {
         super(entityInformation, entityManager);
         this.entityInformation = entityInformation;
@@ -27,5 +32,15 @@ public class BaseRepositoryImpl<DOMAIN, ID> extends SimpleJpaRepository<DOMAIN, 
     @Override
     protected <S extends DOMAIN> Page<S> readPage(TypedQuery<S> query, Class<S> domainClass, Pageable pageable, Specification<S> spec) {
         return super.readPage(query, domainClass, pageable, spec);
+    }
+
+    @Override
+    public long deleteByIdIn(Collection<ID> ids) {
+
+        List<DOMAIN> entities = findAllById(ids);
+
+        deleteInBatch(entities);
+
+        return entities.size();
     }
 }

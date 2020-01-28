@@ -21,6 +21,11 @@ public class FaceController {
         this.userService = userService;
     }
 
+    @PostMapping(value = "proxy")
+    public void proxy(@RequestBody String data) {
+        System.out.println(data);
+    }
+
     @PostMapping("login")
     public BaseResponse face(@RequestBody String base64) {
         return userService.faceMatch(JSONObject.parseObject(base64).getString("data"));

@@ -35,15 +35,20 @@ public interface UserService extends CrudService<User, Integer> {
 
     AuthToken login(LoginParam loginParam);
 
+    @Deprecated
     Object logout();
+
+    Object logout(Integer id, AuthToken authToken);
+
+    void logout(AuthToken authToken);
 
     Optional<User> getByLoginName(String username);
 
     User getByLoginNameOfNonNull(String username);
 
-    Page search(String keyword, String status, Pageable pageable);
-
     BaseResponse faceMatch(String base64);
 
     BaseResponse addFace(Integer id, String base64);
+
+    Page<User> search(String keyword, String status, Pageable pageable);
 }
