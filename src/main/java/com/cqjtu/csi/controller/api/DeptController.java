@@ -1,24 +1,25 @@
 package com.cqjtu.csi.controller.api;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.cqjtu.csi.model.entity.Dept;
 import com.cqjtu.csi.model.support.BaseResponse;
 import com.cqjtu.csi.service.DeptService;
 import com.cqjtu.csi.utils.BaseUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author mumu
  * @date 2020/1/20
  */
+@Api(tags = {"部门管理接口"})
 @RestController
-@RequestMapping(value = "/dept")
+@RequestMapping(value = "/api/dept")
 public class DeptController {
 
     private DeptService deptService;
@@ -40,12 +41,14 @@ public class DeptController {
     /**
      * 添加（插入）
      *
-     * @param json 数据json
+     * @param dept 数据json
      * @return 添加成功BaseResponse
      */
     @PostMapping("a/insert")
-    public BaseResponse insert(@RequestBody String json) {
-        deptService.insert(JSON.parseObject(json, Dept.class));
+    @ApiOperation("添加数据接口")
+    public BaseResponse insert(@RequestBody Dept dept) {
+//        deptService.insert(JSON.parseObject(json, Dept.class));
+        deptService.insert(dept);
         return BaseUtils.insertSucceed();
     }
 
@@ -56,22 +59,21 @@ public class DeptController {
      * @return 删除成功BaseResponse
      */
     @PostMapping("a/delete")
-    public BaseResponse delete(@RequestBody String ids) {
-        Collection<Integer> collection = JSON.parseObject(ids, new TypeReference<Collection<Integer>>() {});
-        deptService.removeInBetch(collection);
+    public BaseResponse delete(@RequestBody List<Integer> ids) {
+//        Collection<Integer> collection = JSON.parseObject(ids, new TypeReference<Collection<Integer>>() {});
+        deptService.removeInBetch(ids);
         return BaseUtils.deleteSucceed();
     }
 
     /**
      * 更新
      *
-     * @param id   需要更新的数据id
-     * @param json 更新的数据
+     * @param dept 更新的数据
      * @return 更新成功BaseResponse
      */
-    @PostMapping("a/update/{id:\\d+}")
-    public BaseResponse update(@PathVariable("id") Integer id, @RequestBody String json) {
-        deptService.update(JSON.parseObject(json, Dept.class));
+    @PostMapping("a/update")
+    public BaseResponse update(@RequestBody Dept dept) {
+        deptService.update(dept);
         return BaseUtils.updateSucceed();
     }
 }

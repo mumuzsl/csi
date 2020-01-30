@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -19,11 +21,27 @@ import org.springframework.web.bind.annotation.*;
 public class ControllerExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
+    @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    public BaseResponse handleHttpMediaTypeNotAcceptableException(HttpMediaTypeNotAcceptableException e) {
+        BaseResponse<?> baseResponse = handleBaseException(e);
+        baseResponse.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
+        return baseResponse;
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BaseResponse handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        BaseResponse<?> baseResponse = handleBaseException(e);
+        baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+        return baseResponse;
+    }
+
     @ExceptionHandler(BaseException.class)
     public BaseResponse handleHaloException(BaseException e) {
         BaseResponse<Object> baseResponse = handleBaseException(e);
         baseResponse.setStatus(e.getStatus().value());
-        baseResponse.setDataToJSON(e.getErrorData());
+//        baseResponse.setDataToJSON(e.getErrorData());
         return baseResponse;
     }
 

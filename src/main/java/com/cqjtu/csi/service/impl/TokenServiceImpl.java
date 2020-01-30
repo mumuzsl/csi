@@ -1,23 +1,16 @@
 package com.cqjtu.csi.service.impl;
 
-import cn.hutool.core.date.DateUtil;
 import com.cqjtu.csi.core.CsiConst;
-import com.cqjtu.csi.exception.NotFoundException;
-import com.cqjtu.csi.model.entity.BaseEntity;
+import com.cqjtu.csi.exception.AuthenticationException;
 import com.cqjtu.csi.model.entity.Token;
 import com.cqjtu.csi.repository.TokenRepository;
-import com.cqjtu.csi.repository.base.BaseRepository;
-import com.cqjtu.csi.security.token.AuthToken;
 import com.cqjtu.csi.service.TokenService;
 import com.cqjtu.csi.service.base.AbstractCrudService;
 import com.cqjtu.csi.utils.BaseUtils;
 import com.cqjtu.csi.utils.DateTimeUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -64,6 +57,12 @@ public class TokenServiceImpl extends AbstractCrudService<Token, Integer> implem
 
     @Override
     public Token getByToken(String token) {
-        return tokenRepository.findByToken(token).orElseThrow(() -> new NotFoundException("没有登录记录"));
+        return getOne(token).orElseThrow(() -> new AuthenticationException("token无效"));
     }
+
+    @Override
+    public Optional<Token> getOne(String token) {
+        return tokenRepository.findByToken(token);
+    }
+
 }

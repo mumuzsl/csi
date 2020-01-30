@@ -6,8 +6,10 @@ import com.cqjtu.csi.core.role.Role;
 import com.cqjtu.csi.exception.AuthenticationException;
 import com.cqjtu.csi.exception.BadRequestException;
 import com.cqjtu.csi.exception.BaseException;
+import com.cqjtu.csi.exception.NotFoundException;
 import com.cqjtu.csi.model.entity.Token;
 import com.cqjtu.csi.model.entity.User;
+import com.cqjtu.csi.security.handle.FailureHandler;
 import com.cqjtu.csi.security.token.AuthToken;
 import com.cqjtu.csi.service.TokenService;
 import com.cqjtu.csi.service.UserService;
@@ -36,6 +38,7 @@ public class RoleFilter extends AbstractFilter {
     public RoleFilter(UserService userService, TokenService tokenService) {
         super(tokenService);
         this.userService = userService;
+
     }
 
     @Override
@@ -43,7 +46,6 @@ public class RoleFilter extends AbstractFilter {
         String token = getToken(request);
 
         Integer userId = tokenService.getByToken(token).getUserId();
-
         User user = userService.getById(userId);
 
         if (Role.ADMIN.compare(user.getStatus())) {
@@ -51,6 +53,7 @@ public class RoleFilter extends AbstractFilter {
         } else {
             response.sendError(HttpStatus.FORBIDDEN.value());
         }
+
     }
 
 }

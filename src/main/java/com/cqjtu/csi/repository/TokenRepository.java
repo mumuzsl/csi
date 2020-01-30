@@ -13,4 +13,5 @@ public interface TokenRepository extends BaseRepository<Token, Integer> {
 
     Optional<Token> findByToken(String token);
 
+    boolean existsByToken(String token);
 }

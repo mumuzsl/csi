@@ -6,12 +6,20 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @author mumu
  * @date 2020/1/21
  */
 public class BaseResponse<T> implements Serializable {
+
+    /**
+     * Response time.
+     */
+    private String timestamp = LocalDateTime.now().toString();
 
     /**
      * Response status.
@@ -34,6 +42,14 @@ public class BaseResponse<T> implements Serializable {
     private Object data;
 
     public BaseResponse() {}
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public Integer getStatus() {
         return status;

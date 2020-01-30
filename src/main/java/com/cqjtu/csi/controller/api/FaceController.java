@@ -4,14 +4,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.cqjtu.csi.model.entity.User;
 import com.cqjtu.csi.model.support.BaseResponse;
 import com.cqjtu.csi.service.UserService;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * @author mumu
  * @date 2020/1/24
  */
+@Api("人脸管理接口")
 @RestController
-@RequestMapping(value = "/face")
+@RequestMapping(value = "/api/face")
 @CrossOrigin
 public class FaceController {
 

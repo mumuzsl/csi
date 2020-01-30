@@ -1,0 +1,16 @@
+[Unit]
+Description=Csi Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/java -server -Xms512m -Xmx512m -jar /mumu/csi/csi.jar
+ExecStop=/bin/kill -s QUIT $MAINPID
+Restart=always
+StandOutput=syslog
+
+StandError=inherit
+
+[Install]
+WantedBy=multi-user.target

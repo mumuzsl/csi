@@ -9,6 +9,7 @@ import org.springframework.util.CollectionUtils;
 import com.cqjtu.csi.exception.BeanUtilsException;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,30 @@ import java.util.stream.Collectors;
 public class BeanUtils {
 
     private BeanUtils() {
+    }
+
+    public static Field getField(Field[] fields, String fieldName) {
+        return Arrays.stream(fields)
+                .filter(field -> fieldName.equals(field.getName()))
+                .findFirst()
+                .orElseThrow(() -> new BeanUtilsException("No " + fieldName + " field"));
+    }
+
+    /**
+     * @param t
+     * @param fieldName
+     * @param <T>
+     * @return
+     * @throws BeanUtilsException
+     */
+    public static <T> Object getFieldValue(T t, String fieldName) {
+        try {
+            Field field = getField(t.getClass().getDeclaredFields(), fieldName);
+            field.setAccessible(true);
+            return field.get(t);
+        } catch (IllegalAccessException e) {
+            throw new BeanUtilsException("Failed to get the value of the " + fieldName + "field", e);
+        }
     }
 
     /**

@@ -4,3 +4,8 @@ spring:
 logging:
   level:
     root: INFO
+  file:
+    path: ${user.home}/.halo/logs
+
+server:
+  port: 8888

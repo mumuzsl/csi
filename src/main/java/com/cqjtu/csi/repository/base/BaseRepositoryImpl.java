@@ -1,10 +1,12 @@
 package com.cqjtu.csi.repository.base;
 
+import com.cqjtu.csi.exception.BaseException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -35,6 +37,7 @@ public class BaseRepositoryImpl<DOMAIN, ID> extends SimpleJpaRepository<DOMAIN, 
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public long deleteByIdIn(Collection<ID> ids) {
 
         List<DOMAIN> entities = findAllById(ids);

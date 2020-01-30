@@ -20,6 +20,8 @@ public interface TokenService extends CrudService<Token, Integer> {
 
     Token getByToken(@NonNull String token);
 
+    Optional<Token> getOne(@NonNull String token);
+
     boolean isExpired(String token);
 
     boolean isExpired(Token token);

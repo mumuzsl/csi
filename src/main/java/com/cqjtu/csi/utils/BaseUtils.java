@@ -10,6 +10,8 @@ import com.cqjtu.csi.security.token.AuthToken;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -69,6 +71,5 @@ public class BaseUtils {
     public static String data2SHA256(String data) {
         return new Digester(DigestAlgorithm.SHA256).digestHex(data);
     }
-
 
 }

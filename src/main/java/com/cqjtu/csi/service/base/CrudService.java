@@ -16,7 +16,11 @@ public interface CrudService<DOMAIN, ID> {
 
     DOMAIN insert(DOMAIN domain);
 
+    DOMAIN updateById(ID id, DOMAIN domain);
+
     DOMAIN update(DOMAIN domain);
+
+    DOMAIN updateAll(DOMAIN domain);
 
     void removeInBetch(Collection<ID> ids);
 

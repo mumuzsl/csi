@@ -6,6 +6,7 @@ import com.cqjtu.csi.exception.AuthenticationException;
 import com.cqjtu.csi.exception.BadRequestException;
 import com.cqjtu.csi.model.entity.Token;
 import com.cqjtu.csi.model.entity.User;
+import com.cqjtu.csi.security.handle.FailureHandler;
 import com.cqjtu.csi.security.token.AuthToken;
 import com.cqjtu.csi.service.TokenService;
 import com.cqjtu.csi.service.UserService;
@@ -35,11 +36,13 @@ public abstract class AbstractFilter extends OncePerRequestFilter {
     protected final CacheStore<String, String> cacheStore;
     protected Set<String> excludeUrlPatterns = new HashSet<>(2);
     protected final TokenService tokenService;
+    protected final FailureHandler failureHandler;
 
     public AbstractFilter(TokenService tokenService) {
         this.antPathMatcher = new AntPathMatcher();
         this.cacheStore = new InMemoryCacheStore();
         this.tokenService = tokenService;
+        this.failureHandler = new FailureHandler();
     }
 
     public void addExcludeUrlPatterns(@NonNull String... excludeUrlPatterns) {
@@ -58,14 +61,11 @@ public abstract class AbstractFilter extends OncePerRequestFilter {
     String getToken(HttpServletRequest request) {
         log.info("request path: {}", request.getServletPath());
 
-        String token = request.getHeader("token");
-        System.out.println("he");
-
         request.getParameterMap().forEach((key, value) -> {
             log.info("{} : {}", key, String.join(",", value));
         });
 
-        return token;
+        return request.getHeader("token");
     }
 
     protected abstract void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException;

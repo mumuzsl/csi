@@ -24,46 +24,46 @@ class CsiApplicationTests {
 
     @Test
     void contextLoads() {
-        Date from = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Shanghai"))));
-        System.out.println(from);
+//        Date from = Date.from(Instant.now(Clock.system(ZoneId.of("Asia/Shanghai"))));
+//        System.out.println(from);
     }
-
-    @Test
-    void aa() {
-
-        HashMap<String, String> map = new HashMap<>();
-        map.put("name", "zhao");
-
-        Object o = JSON.toJSON(map);
-
-        Dept d = BeanUtils.transformFrom(o, Dept.class);
-
-        System.out.println(d.toString());
-    }
-
-    @Test
-    void bb() {
-        Map<String, String> map = new HashMap<>();
-        map.put("name", "zhao");
-
-        Dept dept = BeanUtil.mapToBean(map, Dept.class, true);
-
-        System.out.println(dept.toString());
-    }
-
-    @Test
-    void cc() {
-
-        DeptServiceImpl deptService = new DeptServiceImpl(null);
-
-        Map<String, String> map = new HashMap<>();
-        map.put("name", "人事部");
-
-        Page d = deptService.search(map, null);
-
-        d.get().forEach(o -> {
-            System.out.println(o.toString());
-        });
-
-    }
+//
+//    @Test
+//    void aa() {
+//
+//    HashMap<String, String> map = new HashMap<>();
+//    map.put("name", "zhao");
+//
+//    Object o = JSON.toJSON(map);
+//
+//    Dept d = BeanUtils.transformFrom(o, Dept.class);
+//
+//    System.out.println(d.toString());
+//}
+//
+//    @Test
+//    void bb() {
+//        Map<String, String> map = new HashMap<>();
+//        map.put("name", "zhao");
+//
+//        Dept dept = BeanUtil.mapToBean(map, Dept.class, true);
+//
+//        System.out.println(dept.toString());
+//    }
+//
+//    @Test
+//    void cc() {
+//
+//        DeptServiceImpl deptService = new DeptServiceImpl(null);
+//
+//        Map<String, String> map = new HashMap<>();
+//        map.put("name", "人事部");
+//
+//        Page d = deptService.search(map, null);
+//
+//        d.get().forEach(o -> {
+//            System.out.println(o.toString());
+//        });
+//
+//    }
 }
