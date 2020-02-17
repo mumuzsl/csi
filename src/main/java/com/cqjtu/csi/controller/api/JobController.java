@@ -6,6 +6,7 @@ import com.cqjtu.csi.model.entity.Job;
 import com.cqjtu.csi.model.support.BaseResponse;
 import com.cqjtu.csi.service.JobService;
 import com.cqjtu.csi.utils.BaseUtils;
+import com.cqjtu.csi.utils.PageUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
@@ -33,7 +34,7 @@ public class JobController {
 
     @GetMapping
     public Page search(@RequestParam(name = "keyword", required = false) String keyword, @PageableDefault Pageable pageable) {
-        return null == keyword ? jobService.pageBy(pageable) : jobService.search(keyword, pageable);
+        return null == keyword ? jobService.pageBy(pageable) : jobService.search(keyword, PageUtils.of(pageable));
     }
 
     /**
@@ -42,7 +43,8 @@ public class JobController {
      * @param job 数据json
      * @return 添加成功BaseResponse
      */
-    @PostMapping("a/insert")  @ApiOperation("添加数据接口")
+    @PostMapping("a/insert")
+    @ApiOperation("添加数据接口")
     public BaseResponse insert(@RequestBody Job job) {
         jobService.insert(job);
         return BaseUtils.insertSucceed();
@@ -67,7 +69,7 @@ public class JobController {
      * @return 更新成功BaseResponse
      */
     @PostMapping("a/update")
-    public BaseResponse update( @RequestBody Job job) {
+    public BaseResponse update(@RequestBody Job job) {
         jobService.update(job);
         return BaseUtils.updateSucceed();
     }

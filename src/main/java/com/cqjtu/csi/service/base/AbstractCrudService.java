@@ -2,12 +2,14 @@ package com.cqjtu.csi.service.base;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.cqjtu.csi.exception.BadRequestException;
+import com.cqjtu.csi.exception.BeanUtilsException;
 import com.cqjtu.csi.exception.NotFoundException;
 import com.cqjtu.csi.repository.base.BaseRepository;
 import com.cqjtu.csi.utils.BaseUtils;
 import com.cqjtu.csi.utils.BeanUtils;
 import com.cqjtu.csi.utils.PageUtils;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ public abstract class AbstractCrudService<DOMAIN, ID> implements CrudService<DOM
     private final String domainName;
     private final Class<?> domainClass;
     private final BaseRepository<DOMAIN, ID> repository;
+    protected final ExampleMatcher.GenericPropertyMatcher contains = ExampleMatcher.GenericPropertyMatchers.contains();
 
     protected AbstractCrudService(BaseRepository<DOMAIN, ID> repository) {
         this.repository = repository;
@@ -82,7 +85,7 @@ public abstract class AbstractCrudService<DOMAIN, ID> implements CrudService<DOM
     public DOMAIN updateById(ID id, DOMAIN domain) {
         Assert.notNull(id, "id not be null");
 
-        DOMAIN oldDomain = getById(id);
+        DOMAIN oldDomain = this.getOne(id);
 
         BeanUtils.updateProperties(domain, oldDomain);
 
@@ -92,10 +95,12 @@ public abstract class AbstractCrudService<DOMAIN, ID> implements CrudService<DOM
     @Override
     public DOMAIN update(DOMAIN domain) {
         Assert.notNull(domain, "domain not be null");
-
-        Object id = BeanUtils.getFieldValue(domain, "id");
-
-        return updateById((ID) id, domain);
+        try {
+            Object id = BeanUtils.getFieldValue(domain, "id");
+            return updateById((ID) Optional.of(id).get(), domain);
+        } catch (BeanUtilsException | NullPointerException e) {
+            throw new BadRequestException("没有id");
+        }
     }
 
     @Override
@@ -111,23 +116,28 @@ public abstract class AbstractCrudService<DOMAIN, ID> implements CrudService<DOM
     }
 
     @Override
-    public Page<DOMAIN> pageBy(Integer page) {
+    public Page pageBy(Integer page) {
         return repository.findAll(PageUtils.of(page));
     }
 
     @Override
-    public Page<DOMAIN> pageBy(String page) {
+    public Page pageBy(String page) {
         return pageBy(PageUtils.of(page));
     }
 
     @Override
-    public Page<DOMAIN> pageBy(Pageable pageable) {
-        return repository.findAll(pageable);
+    public Page pageBy(Pageable pageable) {
+        return repository.findAll(PageUtils.of(pageable));
     }
 
     @Override
-    public DOMAIN getById(ID id) {
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("无效id"));
+    public DOMAIN getOne(ID id) {
+        return repository.findById(id).orElseThrow(() -> new BadRequestException("无效id"));
+    }
+
+    @Override
+    public Optional<DOMAIN> getById(ID id) {
+        return Optional.of(getOne(id));
     }
 
     @Override
@@ -136,24 +146,24 @@ public abstract class AbstractCrudService<DOMAIN, ID> implements CrudService<DOM
     }
 
     @Override
-    public List<DOMAIN> listAll() {
+    public List listAll() {
         return repository.findAll();
     }
 
     @Override
-    public Page<DOMAIN> search(String keyword, Pageable pageable) {
+    public Page search(String keyword, Pageable pageable) {
         return search(BaseUtils.oneKeyValueMap(keyword, "name"), pageable);
     }
 
     @Override
-    public Page<DOMAIN> search(Map map, Pageable pageable) {
+    public Page search(Map map, Pageable pageable) {
         Class<DOMAIN> domainClass = (Class<DOMAIN>) fetchType(0);
         Object key = BeanUtil.mapToBean(map, domainClass, true);
         return search((DOMAIN) key, pageable);
     }
 
     @Override
-    public Page<DOMAIN> search(DOMAIN key, Pageable pageable) {
+    public Page search(DOMAIN key, Pageable pageable) {
         return repository.findAll(Example.of(key), pageable);
     }
 }

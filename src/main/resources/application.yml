@@ -1,11 +1,16 @@
 spring:
   profiles:
     active: dev
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT
 logging:
   level:
     root: INFO
+    io.swagger: DEBUG
   file:
     path: ${user.home}/.halo/logs
+
 
 server:
   port: 8888

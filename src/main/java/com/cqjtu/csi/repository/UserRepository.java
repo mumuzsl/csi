@@ -26,11 +26,14 @@ public interface UserRepository extends BaseRepository<User, Integer> {
     /**
      * Gets user by username.
      *
-     * @param username username must not be blank
+     * @param loginName username must not be blank
      * @return an optional user
      */
     @NonNull
-    Optional<User> findByLoginName(@NonNull String username);
+    Optional<User> findByLoginName(@NonNull String loginName);
+
+    @NonNull
+    Optional<User> findByUsername(@NonNull String username);
 
     @Query(value = "select * from dept where user.username like concat('%',:name,'%') limit :first, :size", nativeQuery = true)
     List search(@Param("name") String name, @Param("first") Long first, @Param("size") Integer size);
@@ -46,6 +49,6 @@ public interface UserRepository extends BaseRepository<User, Integer> {
 
     @Transactional(rollbackFor = Exception.class)
     @Modifying
-    @Query(value = "UPDATE `user` SET `facepath` = :path WHERE `id` = :id", nativeQuery = true)
+    @Query(value = "UPDATE `user` SET `facepath` = :path WHERE `id` in :id", nativeQuery = true)
     void updateFacepath(@Param("id") Integer id, @Param("path") String path);
 }

@@ -45,4 +45,6 @@ public interface DeptRepository extends BaseRepository<Dept, Integer> {
     @Query(value = "select count(*) from dept where dept.name like concat('%',:name,'%')", nativeQuery = true)
     Long countByName(@Param("name") String name);
 
+//    @Query(value = "select name from dept where id = :id", nativeQuery = true)
+//    String getName(@Param("id") Integer id);
 }

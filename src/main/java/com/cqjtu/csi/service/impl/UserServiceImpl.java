@@ -7,9 +7,12 @@ import com.cqjtu.csi.core.FaceClient;
 import com.cqjtu.csi.core.CsiConst;
 import com.cqjtu.csi.exception.BadRequestException;
 import com.cqjtu.csi.exception.NotFoundException;
+import com.cqjtu.csi.model.dto.base.InputConverter;
+import com.cqjtu.csi.model.entity.Notice;
 import com.cqjtu.csi.model.entity.Token;
 import com.cqjtu.csi.model.entity.User;
 import com.cqjtu.csi.model.param.LoginParam;
+import com.cqjtu.csi.model.param.NoticeParam;
 import com.cqjtu.csi.model.param.UserParam;
 import com.cqjtu.csi.model.support.BaseResponse;
 import com.cqjtu.csi.repository.UserRepository;
@@ -21,6 +24,8 @@ import com.cqjtu.csi.service.TokenService;
 import com.cqjtu.csi.service.UserService;
 import com.cqjtu.csi.service.base.AbstractCrudService;
 import com.cqjtu.csi.utils.BaseUtils;
+import com.cqjtu.csi.utils.BeanUtils;
+import com.cqjtu.csi.utils.PageUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
@@ -138,6 +143,11 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
     }
 
     @Override
+    public Optional<User> getByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
     public User getByLoginNameOfNonNull(String username) {
         return getByLoginName(username).orElseThrow(() -> new NotFoundException("The username dose not exist").setErrorData(username));
     }
@@ -169,11 +179,13 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
 
     @Override
     public Page<User> search(String keyword, String status, Pageable pageable) {
-        return userRepository.findByUsernameContainingAndStatusEquals(
-                keyword,
-                BaseUtils.userStatus(status),
-                pageable
-        );
+        return StringUtils.isBlank(status) ?
+                userRepository.findByUsernameContaining(keyword, pageable) :
+                userRepository.findByUsernameContainingAndStatusEquals(
+                        keyword,
+                        BaseUtils.userStatus(status),
+                        pageable
+                );
     }
 
     /**
@@ -199,5 +211,12 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
         return token;
     }
 
-
+    @Override
+    public <T> T check(InputConverter<T> noticeParam) {
+        Optional<User> userOptional = getByUsername(String.valueOf(BeanUtils.getFieldValue(noticeParam, "username")));
+        if (!userOptional.isPresent()) {
+            throw new BadRequestException("用户不存在");
+        }
+        return noticeParam.convertTo();
+    }
 }

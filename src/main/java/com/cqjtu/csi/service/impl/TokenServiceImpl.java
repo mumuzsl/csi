@@ -52,7 +52,7 @@ public class TokenServiceImpl extends AbstractCrudService<Token, Integer> implem
 
     @Override
     public boolean isExpired(Token token) {
-        return DateTimeUtils.after(token.getExpiredDate());
+        return DateTimeUtils.before(token.getExpiredDate());
     }
 
     @Override

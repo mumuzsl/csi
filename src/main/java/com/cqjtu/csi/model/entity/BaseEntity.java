@@ -1,8 +1,12 @@
 package com.cqjtu.csi.model.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.cqjtu.csi.utils.DateTimeUtils;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -24,14 +28,14 @@ public class BaseEntity {
         this.createTime = createTime;
     }
 
+
     /**
      * 在持久化之前自动填充实体属性
-     *
      */
     @PrePersist
     protected void prePersist() {
         if (createTime == null) {
-            createTime = DateTimeUtils.now();
+            createTime = DateTimeUtils.nowDate();
         }
     }
 

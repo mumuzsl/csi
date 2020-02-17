@@ -35,13 +35,11 @@ public abstract class AbstractFilter extends OncePerRequestFilter {
     protected final AntPathMatcher antPathMatcher;
     protected final CacheStore<String, String> cacheStore;
     protected Set<String> excludeUrlPatterns = new HashSet<>(2);
-    protected final TokenService tokenService;
     protected final FailureHandler failureHandler;
 
-    public AbstractFilter(TokenService tokenService) {
+    public AbstractFilter() {
         this.antPathMatcher = new AntPathMatcher();
         this.cacheStore = new InMemoryCacheStore();
-        this.tokenService = tokenService;
         this.failureHandler = new FailureHandler();
     }
 
@@ -56,16 +54,6 @@ public abstract class AbstractFilter extends OncePerRequestFilter {
         Assert.notNull(request, "Http servlet request must not be null");
 
         return excludeUrlPatterns.stream().anyMatch(p -> antPathMatcher.match(p, request.getServletPath()));
-    }
-
-    String getToken(HttpServletRequest request) {
-        log.info("request path: {}", request.getServletPath());
-
-        request.getParameterMap().forEach((key, value) -> {
-            log.info("{} : {}", key, String.join(",", value));
-        });
-
-        return request.getHeader("token");
     }
 
     protected abstract void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException;

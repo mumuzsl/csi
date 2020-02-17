@@ -1,5 +1,7 @@
 package com.cqjtu.csi.listener;
 
+import cn.hutool.core.io.FileUtil;
+import com.cqjtu.csi.core.CsiConst;
 import com.cqjtu.csi.exception.NotFoundException;
 import com.cqjtu.csi.service.UserService;
 import org.slf4j.Logger;
@@ -30,6 +32,7 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
         this.initAdminInDataBase();
+        this.createDir();
     }
 
     private void initAdminInDataBase() {
@@ -45,5 +48,10 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
             userService.registerAdmin();
             log.info("create admin finish.");
         }
+    }
+
+    private void createDir() {
+        FileUtil.mkdir(CsiConst.DOCUMENT_DIR);
+        log.info("create document dir");
     }
 }

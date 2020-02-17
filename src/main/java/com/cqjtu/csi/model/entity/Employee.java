@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateTime;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -51,7 +52,7 @@ public class Employee extends BaseEntity {
     private String party;
 
     @Column(name = "birthday")
-    private DateTime birthday;
+    private Date birthday;
 
     @Column(name = "race")
     private String race;
@@ -168,11 +169,11 @@ public class Employee extends BaseEntity {
         this.party = party;
     }
 
-    public DateTime getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(DateTime birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 

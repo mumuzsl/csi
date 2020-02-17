@@ -26,6 +26,16 @@ public class UserParam implements InputConverter<User> {
     @Size(min = 4, max = 32, message = "密码的字符长度必须在 {min} - {max} 之间")
     private String password;
 
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getLoginName() {
         return loginName;
     }

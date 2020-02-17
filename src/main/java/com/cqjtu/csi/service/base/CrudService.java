@@ -1,11 +1,15 @@
 package com.cqjtu.csi.service.base;
 
+import com.cqjtu.csi.model.dto.base.OutputConverter;
+import com.sun.java.browser.plugin2.DOM;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author mumu
@@ -28,15 +32,17 @@ public interface CrudService<DOMAIN, ID> {
 
     void remove(DOMAIN domain);
 
-    List<DOMAIN> listAll();
+    List listAll();
 
-    Page<DOMAIN> pageBy(Integer page);
+    Page pageBy(Integer page);
 
-    Page<DOMAIN> pageBy(String page);
+    Page pageBy(String page);
 
-    Page<DOMAIN> pageBy(Pageable pageable);
+    Page pageBy(Pageable pageable);
 
-    DOMAIN getById(ID id);
+    DOMAIN getOne(ID id);
+
+    Optional<DOMAIN> getById(ID id);
 
     Long count();
 
@@ -48,7 +54,7 @@ public interface CrudService<DOMAIN, ID> {
      * @param pageable 分页
      * @return 分页后的搜索结果
      */
-    Page<DOMAIN> search(String keyword, Pageable pageable);
+    Page search(String keyword, Pageable pageable);
 
     /**
      * 在数据中进行搜索
@@ -58,7 +64,7 @@ public interface CrudService<DOMAIN, ID> {
      * @param pageable 分页
      * @return 分页后的搜索结果
      */
-    Page<DOMAIN> search(Map map, Pageable pageable);
+    Page search(Map map, Pageable pageable);
 
     /**
      * 在数据中进行搜索
@@ -68,5 +74,5 @@ public interface CrudService<DOMAIN, ID> {
      * @param pageable 分页
      * @return 分页后的搜索结果
      */
-    Page<DOMAIN> search(DOMAIN key, Pageable pageable);
+    Page search(DOMAIN key, Pageable pageable);
 }

@@ -11,6 +11,8 @@ public class CsiConst {
      */
     public static final String USER_HOME = System.getProperties().getProperty("user.home");
 
+    public static final String DEFAULT_WORK_DIR = USER_HOME + "/.csi";
+
     public static final String SUCCESS = "成功";
 
     public static final String FAILED = "失败";
@@ -33,11 +35,16 @@ public class CsiConst {
 
     public static final String IMG_DIR = USER_HOME + "/img";
 
+    public static final String DOCUMENT_DIR = DEFAULT_WORK_DIR + "/document/";
+
     public static final String SUFFIX_FACE = ".face";
 
     public static final String FACE_FILE_FORMAT = IMG_DIR + "/{0}" + SUFFIX_FACE;
 
-    public static final int ACCESS_TOKEN_EXPIRED_SECONDS = 24 * 3600;
+    public static final String DEFAULT_CHARSET = "utf-8";
+
+    // token有效期为24小时
+    public static final int ACCESS_TOKEN_EXPIRED_SECONDS = 0x15180;
 
     public static String toFacePath(String name) {
         return String.format(FACE_FILE_FORMAT, name);

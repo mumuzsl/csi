@@ -25,9 +25,23 @@ import static cn.hutool.http.HttpStatus.HTTP_FORBIDDEN;
  * @date 2020/1/21
  */
 public class RequestFilter extends AbstractFilter {
+    protected final TokenService tokenService;
 
     public RequestFilter(TokenService tokenService) {
-        super(tokenService);
+        this.tokenService = tokenService;
+    }
+
+    String getToken(HttpServletRequest request) {
+        log.info("request path: {}", request.getServletPath());
+
+        request.getParameterMap().forEach((key, value) -> {
+            log.info("{} : {}", key, String.join(",", value));
+        });
+
+//        log.info("token : {}", request.getParameter("token"));
+
+//        return request.getHeader("token");
+        return request.getParameter("token");
     }
 
     @Override
@@ -35,15 +49,20 @@ public class RequestFilter extends AbstractFilter {
         String token = getToken(request);
 
         if (StringUtils.isBlank(token)) {
-            response.sendError(HTTP_FORBIDDEN, "请求中不包含token");
+            failureHandler.doHandle(request, response, new AuthenticationException("没有token"));
+            return;
         }
 
         Optional<Token> tokenOptional = tokenService.getOne(token);
 
-        if (!tokenOptional.isPresent() || tokenService.isExpired(tokenOptional.get())) {
+        boolean flag = !tokenOptional.isPresent() || tokenService.isExpired(tokenOptional.get());
+
+        if (flag) {
             failureHandler.doHandle(request, response, new AuthenticationException("token无效"));
             return;
         }
+
+        log.info("request is ok");
 
         filterChain.doFilter(request, response);
     }

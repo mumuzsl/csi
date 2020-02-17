@@ -1,11 +1,16 @@
 package com.cqjtu.csi.controller.api;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.cqjtu.csi.model.dto.DocumentDTO;
+import com.cqjtu.csi.model.dto.EmployeeDTO;
 import com.cqjtu.csi.model.entity.Employee;
+import com.cqjtu.csi.model.param.EmployeeParam;
 import com.cqjtu.csi.model.support.BaseResponse;
 import com.cqjtu.csi.service.EmployeeService;
 import com.cqjtu.csi.utils.BaseUtils;
+import com.cqjtu.csi.utils.PageUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
@@ -37,8 +42,13 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public Page search(@RequestParam(name = "keyword", required = false) String keyword, @PageableDefault Pageable pageable) {
-        return null == keyword ? employeeService.pageBy(pageable) : employeeService.search(keyword, pageable);
+    public Page search(@RequestParam(value = "keyword", required = false) String keyword, EmployeeParam param, @PageableDefault Pageable pageable) {
+        return null == keyword ? employeeService.pageBy(PageUtils.of(pageable)) : employeeService.searchToDto(param.convertTo(), PageUtils.of(pageable));
+    }
+
+    @GetMapping(value = "{id:\\d+}")
+    public EmployeeDTO one(@PathVariable("id") Integer id) {
+        return employeeService.convertById(id);
     }
 
     /**

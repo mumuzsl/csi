@@ -1,7 +1,9 @@
 package com.cqjtu.csi.utils;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestAlgorithm;
 import cn.hutool.crypto.digest.Digester;
+import com.cqjtu.csi.core.CsiConst;
 import com.cqjtu.csi.core.role.Role;
 import com.cqjtu.csi.exception.BadRequestException;
 import com.cqjtu.csi.model.entity.Token;
@@ -38,7 +40,8 @@ public class BaseUtils {
         } else if (Role.NORMAL.compare(status)) {
             return 2;
         } else {
-            throw new BadRequestException("未知权限种类");
+//            throw new BadRequestException("未知权限种类");
+            return 0;
         }
     }
 
@@ -64,6 +67,8 @@ public class BaseUtils {
         return BaseResponse.ok("更新成功");
     }
 
+    public static BaseResponse apiDisable() {return BaseResponse.to400("该api接口已废弃，不可用");}
+
     public static String toPath(String... name) {
         return StringUtils.join(name, "/");
     }
@@ -72,4 +77,11 @@ public class BaseUtils {
         return new Digester(DigestAlgorithm.SHA256).digestHex(data);
     }
 
+    public static String webStr(String s) {
+        return webStr(s, CsiConst.DEFAULT_CHARSET);
+    }
+
+    public static String webStr(String s, String charset) {
+        return StrUtil.str(StrUtil.bytes(s, charset), "ISO8859-1");
+    }
 }

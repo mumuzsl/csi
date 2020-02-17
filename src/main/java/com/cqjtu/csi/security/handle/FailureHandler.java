@@ -20,20 +20,19 @@ import java.io.IOException;
 public class FailureHandler {
 
     public void doHandle(HttpServletRequest request, HttpServletResponse response, BaseException exception) throws ServletException, IOException {
+        doHandle(response, exception);
+    }
+
+    public static void doHandle(HttpServletResponse response, BaseException exception) throws IOException {
         BaseResponse<Object> errorDetail = new BaseResponse<>();
 
         errorDetail.setStatus(exception.getStatus().value());
         errorDetail.setMessage(exception.getMessage());
         errorDetail.setData(exception.getErrorData());
 
-//        if (!productionEnv) {
-//            errorDetail.setDevMessage(ExceptionUtils.getStackTrace(exception));
-//        }
-
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("utf-8");
         response.setStatus(exception.getStatus().value());
         response.getWriter().write(JSONObject.toJSONString(errorDetail));
-
     }
 }

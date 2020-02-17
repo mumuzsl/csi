@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author mumu
@@ -45,5 +46,15 @@ public class BaseRepositoryImpl<DOMAIN, ID> extends SimpleJpaRepository<DOMAIN, 
         deleteInBatch(entities);
 
         return entities.size();
+    }
+
+    //    @Override
+    public Page search(Specification<DOMAIN> specification, Pageable pageable) {
+        return findAll(specification, pageable);
+    }
+
+    @Override
+    public String getName(Integer id) {
+        return null;
     }
 }

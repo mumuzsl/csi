@@ -1,6 +1,8 @@
 package com.cqjtu.csi.config;
 
 import com.cqjtu.csi.core.CsiConst;
+import com.cqjtu.csi.security.filter.CorsFilter;
+import com.cqjtu.csi.security.filter.PageableFilter;
 import com.cqjtu.csi.security.filter.RequestFilter;
 import com.cqjtu.csi.security.filter.RoleFilter;
 import com.cqjtu.csi.security.handle.FailureHandler;
@@ -12,6 +14,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
@@ -29,6 +32,21 @@ public class CsiConfigurer implements WebMvcConfigurer {
 
     private static final String FILE_PROTOCOL = "file:///";
 
+    /**
+     * Creates a CorsFilter.
+     *
+     * @return Cors filter registration bean
+     */
+    @Bean
+    public FilterRegistrationBean<CorsFilter> corsFilter() {
+        FilterRegistrationBean<CorsFilter> corsFilter = new FilterRegistrationBean<>();
+
+        corsFilter.setOrder(Ordered.HIGHEST_PRECEDENCE + 10);
+        corsFilter.setFilter(new CorsFilter());
+        corsFilter.addUrlPatterns("/api/*");
+
+        return corsFilter;
+    }
 
     /**
      * 对api请求进行过滤，验证token，防止非登录情况下能够获取到数据。
@@ -48,12 +66,34 @@ public class CsiConfigurer implements WebMvcConfigurer {
         FilterRegistrationBean<RequestFilter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(requestFilter);
         filterRegistrationBean.addUrlPatterns(
-                "/api/*"
+                "/api/*",
+                "/logout",
+                "/register",
+                "/download/*"
         );
         filterRegistrationBean.setOrder(0);
 
         return filterRegistrationBean;
     }
+
+//    @Bean
+//    public FilterRegistrationBean<PageableFilter> pageableFilter() {
+//        PageableFilter filter = new PageableFilter();
+//
+//        FilterRegistrationBean<PageableFilter> filterRegistrationBean = new FilterRegistrationBean<>();
+//        filterRegistrationBean.setFilter(filter);
+//        filterRegistrationBean.addUrlPatterns(
+//                "/api/dept",
+//                "/api/document",
+//                "/api/employee",
+//                "/api/job",
+//                "/api/notice",
+//                "/api/user"
+//        );
+//        filterRegistrationBean.setOrder(1);
+//
+//        return filterRegistrationBean;
+//    }
 
     /**
      * 对需要管理员权限的请求进行过滤，验证Token，验证权限。
@@ -75,9 +115,10 @@ public class CsiConfigurer implements WebMvcConfigurer {
                 "/api/employee/a/*",
                 "/api/job/a/*",
                 "/api/notice/a/*",
-                "/api/user/a/*"
+                "/api/user/a/*",
+                "/register"
         );
-        filterRegistrationBean.setOrder(1);
+        filterRegistrationBean.setOrder(2);
 
         return filterRegistrationBean;
     }
@@ -149,4 +190,5 @@ public class CsiConfigurer implements WebMvcConfigurer {
         resolver.setContentType("text/html; charset=UTF-8");
         registry.viewResolver(resolver);
     }
+
 }

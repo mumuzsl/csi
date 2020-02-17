@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * @author mumu
  * @date 2020/1/21
  */
-@RestControllerAdvice
+//@RestControllerAdvice
 public class ControllerExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
@@ -29,13 +29,13 @@ public class ControllerExceptionHandler {
         return baseResponse;
     }
 
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public BaseResponse handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
-        BaseResponse<?> baseResponse = handleBaseException(e);
-        baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
-        return baseResponse;
-    }
+//    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public BaseResponse handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+//        BaseResponse<?> baseResponse = handleBaseException(e);
+//        baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+//        return baseResponse;
+//    }
 
     @ExceptionHandler(BaseException.class)
     public BaseResponse handleHaloException(BaseException e) {

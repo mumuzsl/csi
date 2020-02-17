@@ -67,4 +67,15 @@ public class Document extends BaseEntity {
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
+
+    @Override
+    public String toString() {
+        return "Document{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", filename='" + filename + '\'' +
+                ", remark='" + remark + '\'' +
+                ", userId=" + userId +
+                '}';
+    }
 }

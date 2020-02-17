@@ -4,6 +4,7 @@ import com.cqjtu.csi.model.entity.Dept;
 import com.cqjtu.csi.model.support.BaseResponse;
 import com.cqjtu.csi.service.DeptService;
 import com.cqjtu.csi.utils.BaseUtils;
+import com.cqjtu.csi.utils.PageUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
@@ -30,12 +31,12 @@ public class DeptController {
 
     @GetMapping("{deptId:\\d+}")
     public Dept getBy(@PathVariable(name = "deptId") Integer deptId) {
-        return deptService.getById(deptId);
+        return deptService.getOne(deptId);
     }
 
     @GetMapping
     public Page search(@RequestParam(name = "keyword", required = false) String keyword, @PageableDefault Pageable pageable) {
-        return null == keyword ? deptService.pageBy(pageable) : deptService.search(keyword, pageable);
+        return null == keyword ? deptService.pageBy(pageable) : deptService.search(keyword, PageUtils.of(pageable));
     }
 
     /**

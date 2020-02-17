@@ -21,7 +21,7 @@ public class FaceClient {
 
     private FaceClient() {}
 
-    // 常用百度api返回的json属性
+    // 常用百度api返回的常用json属性
     private static final String FACE_TOKEN = "face_token";
     private static final String USER_ID = "user_id";
     private static final String USER_LIST = "user_list";
@@ -121,20 +121,20 @@ public class FaceClient {
     @Deprecated
     public static void addFace(String base64, String name) {
         String path = BaseUtils.toPath(CsiConst.toFacePath(name));
-        System.out.println(path);
+//        System.out.println(path);
         FileUtil.writeString(base64, path, "UTF-8");
     }
 
     /**
      * 向百度api添加人脸数据，即完成人脸注册。
      *
-     * @param id     将用户id用于百度人脸库的中的user_id
+     * @param id     用于百度人脸库的中的user_id
      * @param base64 图片数据经过Base64编码后的字符串
      * @return 百度api返回的face_token
      */
     public static String addFace(Integer id, String base64) {
         JSONObject res = CLENT.addUser(base64, IMAGE_TYPE, GROUP, String.valueOf(id), OPTIONS);
-        System.out.println(res.toString());
+//        System.out.println(res.toString());
         return getString(check(res), FACE_TOKEN);
     }
 

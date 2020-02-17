@@ -68,7 +68,7 @@ public class Token extends BaseEntity {
     }
 
     public long getExpiredDate() {
-        return getCreateTime().getTime() + expiredIn.longValue();
+        return getCreateTime().getTime() + expiredIn.longValue() * 1000;
     }
 
     @Override
