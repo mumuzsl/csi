@@ -1,5 +1,6 @@
 package com.cqjtu.csi.security.filter;
 
+import cn.hutool.core.map.MapUtil;
 import com.cqjtu.csi.exception.AuthenticationException;
 import com.cqjtu.csi.exception.BadRequestException;
 import com.cqjtu.csi.model.entity.Token;
@@ -32,15 +33,11 @@ public class RequestFilter extends AbstractFilter {
     }
 
     String getToken(HttpServletRequest request) {
-        log.info("request path: {}", request.getServletPath());
+        log.info("request-filter path: {}", request.getServletPath());
 
-        request.getParameterMap().forEach((key, value) -> {
-            log.info("{} : {}", key, String.join(",", value));
-        });
+        // 输出request中的参数名和对应的值
+        log.info("{{}}", MapUtil.join(request.getParameterMap(), ",", ":"));
 
-//        log.info("token : {}", request.getParameter("token"));
-
-//        return request.getHeader("token");
         return request.getParameter("token");
     }
 
@@ -62,7 +59,7 @@ public class RequestFilter extends AbstractFilter {
             return;
         }
 
-        log.info("request is ok");
+//        log.info("request is ok");
 
         filterChain.doFilter(request, response);
     }

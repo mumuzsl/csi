@@ -1,6 +1,10 @@
 package com.cqjtu.csi.service.impl;
 
+import com.cqjtu.csi.core.CsiConst;
+import com.cqjtu.csi.exception.BadRequestException;
+import com.cqjtu.csi.exception.DataException;
 import com.cqjtu.csi.model.dto.DocumentDTO;
+import com.cqjtu.csi.model.dto.base.OutputConverter;
 import com.cqjtu.csi.model.entity.Document;
 import com.cqjtu.csi.model.entity.User;
 import com.cqjtu.csi.repository.DocumentRepository;
@@ -12,7 +16,10 @@ import com.cqjtu.csi.utils.PageUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -51,11 +58,40 @@ public class DocumentServiceImpl extends AbstractCrudService<Document, Integer> 
 
     @Override
     public DocumentDTO convert(Document document) {
+        Assert.notNull(document, "document not be null");
+
         DocumentDTO documentDTO = new DocumentDTO().convertFrom(document);
         Optional.ofNullable(document.getUserId())
-                .map(userService::getOne)
-                .map(User::getUsername)
+                .map(userService::addUsername)
                 .ifPresent(documentDTO::setUsername);
+
         return documentDTO;
+    }
+
+    @Override
+    public Document update(Document document) {
+        Assert.notNull(document, "document not be null");
+
+        Integer id = document.getId();
+        Optional.ofNullable(document.getId())
+                .map(this::getOne)
+                .map(Document::getFilename)
+                .map(CsiConst::toDocumentPath)
+                .map(File::new)
+                .map(this::delFile);
+
+        return super.updateById(id, document);
+    }
+
+    boolean delFile(File file) {
+        if (!file.exists()) {
+            return false;
+        }
+
+        if (file.isDirectory()) {
+            Optional.ofNullable(file.listFiles())
+                    .ifPresent(files1 -> Arrays.stream(files1).forEach(this::delFile));
+        }
+        return file.delete();
     }
 }

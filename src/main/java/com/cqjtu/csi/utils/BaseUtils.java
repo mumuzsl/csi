@@ -34,6 +34,7 @@ public class BaseUtils {
         return StringUtils.remove(UUID.randomUUID().toString(), '-');
     }
 
+    @Deprecated
     public static Integer userStatus(String status) {
         if (Role.ADMIN.compare(status)) {
             return 1;

@@ -131,6 +131,11 @@ public abstract class AbstractCrudService<DOMAIN, ID> implements CrudService<DOM
     }
 
     @Override
+    public Optional<DOMAIN> getOneById(ID id) {
+        return repository.findById(id);
+    }
+
+    @Override
     public DOMAIN getOne(ID id) {
         return repository.findById(id).orElseThrow(() -> new BadRequestException("无效id"));
     }

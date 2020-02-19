@@ -1,8 +1,5 @@
 package com.cqjtu.csi.service.base;
 
-import com.cqjtu.csi.model.dto.base.OutputConverter;
-import com.sun.java.browser.plugin2.DOM;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -39,6 +36,8 @@ public interface CrudService<DOMAIN, ID> {
     Page pageBy(String page);
 
     Page pageBy(Pageable pageable);
+
+    Optional<DOMAIN> getOneById(ID id);
 
     DOMAIN getOne(ID id);
 

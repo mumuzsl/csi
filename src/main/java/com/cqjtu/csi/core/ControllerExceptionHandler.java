@@ -2,6 +2,7 @@ package com.cqjtu.csi.core;
 
 import com.alibaba.fastjson.JSON;
 import com.cqjtu.csi.exception.BaseException;
+import com.cqjtu.csi.exception.DataException;
 import com.cqjtu.csi.model.support.BaseResponse;
 import com.cqjtu.csi.security.filter.RequestFilter;
 import org.slf4j.Logger;
@@ -17,9 +18,18 @@ import org.springframework.web.bind.annotation.*;
  * @author mumu
  * @date 2020/1/21
  */
-//@RestControllerAdvice
+@RestControllerAdvice({"com.cqjtu.csi.controller.api"})
 public class ControllerExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(ControllerExceptionHandler.class);
+
+    @ExceptionHandler(DataException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public BaseResponse handleDataExcetion(DataException e) {
+        BaseResponse<?> baseResponse = handleBaseException(e);
+        baseResponse.setStatus(e.getStatus().value());
+        baseResponse.setMessage(e.getMessage());
+        return baseResponse;
+    }
 
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
@@ -29,19 +39,18 @@ public class ControllerExceptionHandler {
         return baseResponse;
     }
 
-//    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    public BaseResponse handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
-//        BaseResponse<?> baseResponse = handleBaseException(e);
-//        baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
-//        return baseResponse;
-//    }
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    public BaseResponse handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        BaseResponse<?> baseResponse = handleBaseException(e);
+        baseResponse.setStatus(HttpStatus.METHOD_NOT_ALLOWED.value());
+        return baseResponse;
+    }
 
     @ExceptionHandler(BaseException.class)
     public BaseResponse handleHaloException(BaseException e) {
         BaseResponse<Object> baseResponse = handleBaseException(e);
         baseResponse.setStatus(e.getStatus().value());
-//        baseResponse.setDataToJSON(e.getErrorData());
         return baseResponse;
     }
 

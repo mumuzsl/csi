@@ -46,6 +46,10 @@ public interface UserService extends CrudService<User, Integer> {
 
     void logout(AuthToken authToken);
 
+    void logout(String token);
+
+    Optional<User> getByToken(String token);
+
     Optional<User> getByLoginName(String username);
 
     Optional<User> getByUsername(String username);
@@ -59,4 +63,6 @@ public interface UserService extends CrudService<User, Integer> {
     Page<User> search(String keyword, String status, Pageable pageable);
 
     <T> T check(InputConverter<T> param);
+
+    String addUsername(Integer id);
 }

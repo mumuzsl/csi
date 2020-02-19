@@ -131,7 +131,7 @@ public class CsiConfigurer implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/static/");
+                .addResourceLocations("classpath:/ui/");
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")
@@ -176,6 +176,7 @@ public class CsiConfigurer implements WebMvcConfigurer {
 //        registration.addPathPatterns("/*");
 //        registration.excludePathPatterns("/error");
     }
+
 
     /**
      * 配置视图解析器

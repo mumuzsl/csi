@@ -57,6 +57,11 @@ public class MainController {
         this.documentService = documentService;
     }
 
+    @GetMapping
+    public void index(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.sendRedirect("index.html");
+    }
+
     @PostMapping
     public void proxy(@RequestBody String body) {
         System.out.println(body);
@@ -70,20 +75,30 @@ public class MainController {
         return BaseResponse.ok(CsiConst.REGISTER_SUCCESS);
     }
 
+    @GetMapping(value = "login")
+    public String login() {
+        return "login";
+    }
+
     @PostMapping(value = "login")
     @ResponseBody
     public AuthToken login(@RequestBody @Valid LoginParam loginParam) {
         return userService.login(loginParam);
     }
 
-    @PostMapping(value = "logout")
-    @ResponseBody
-    public BaseResponse logout(@RequestBody String json) {
-        AuthToken authToken = JSON.parseObject(json, AuthToken.class);
-        userService.logout(authToken);
-        return BaseResponse.ok("已退出");
-    }
+//    @PostMapping(value = "logout")
+//    @ResponseBody
+//    public BaseResponse logout(@RequestBody String json) {
+//        AuthToken authToken = JSON.parseObject(json, AuthToken.class);
+//        userService.logout(authToken);
+//        return BaseResponse.ok("已退出");
+//    }
 
+    @GetMapping(value = "logout")
+    public String logout(@RequestParam("token") String token) {
+//        userService.logout(token);
+        return "logout";
+    }
 
     @GetMapping(value = "download/{id:\\d+}")
     public void download(@PathVariable("id") Integer id, HttpServletResponse response) throws IOException {

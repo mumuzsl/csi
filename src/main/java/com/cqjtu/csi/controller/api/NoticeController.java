@@ -5,10 +5,12 @@ import com.cqjtu.csi.model.dto.DocumentDTO;
 import com.cqjtu.csi.model.dto.NoticeDTO;
 import com.cqjtu.csi.model.entity.Document;
 import com.cqjtu.csi.model.entity.Notice;
+import com.cqjtu.csi.model.entity.Token;
 import com.cqjtu.csi.model.entity.User;
 import com.cqjtu.csi.model.param.NoticeParam;
 import com.cqjtu.csi.model.support.BaseResponse;
 import com.cqjtu.csi.service.NoticeService;
+import com.cqjtu.csi.service.TokenService;
 import com.cqjtu.csi.service.UserService;
 import com.cqjtu.csi.utils.BaseUtils;
 import com.cqjtu.csi.utils.PageUtils;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,12 +34,13 @@ import java.util.Optional;
 @RequestMapping(value = "/api/notice")
 public class NoticeController {
 
+    private final TokenService tokenService;
     private final NoticeService noticeService;
-    private final UserService userService;
 
-    public NoticeController(NoticeService noticeService, UserService userService) {
+    public NoticeController(NoticeService noticeService,
+                            TokenService tokenService) {
         this.noticeService = noticeService;
-        this.userService = userService;
+        this.tokenService = tokenService;
     }
 
     @GetMapping
@@ -52,13 +56,19 @@ public class NoticeController {
     /**
      * 添加（插入）
      *
-     * @param notice 添加的数据
+     * @param noticeParam 添加的数据
      * @return 添加成功BaseResponse
      */
     @PostMapping("a/insert")
     @ApiOperation("添加数据接口")
-    public BaseResponse insert(@RequestBody NoticeParam notice) {
-        noticeService.insert(notice.convertTo());
+    public BaseResponse insert(@RequestBody NoticeParam noticeParam, HttpServletRequest request) {
+        Notice notice = noticeParam.convertTo();
+        // 通过token为公告的创建提供创建人的userId
+        String token = request.getParameter("token");
+        tokenService.getOne(token)
+                .map(Token::getUserId)
+                .ifPresent(notice::setUserId);
+        noticeService.insert(notice);
         return BaseUtils.insertSucceed();
     }
 
@@ -82,6 +92,10 @@ public class NoticeController {
      */
     @PostMapping("a/update")
     public BaseResponse update(@RequestBody Notice notice) {
+        // 因为公告的“创建人”不能修改，并且为了防止有人故意破坏——向该端口发送“创建人”被修改了的数据
+        // 所以把"userId"设置为"null"
+
+        notice.setUserId(null);
         noticeService.update(notice);
         return BaseUtils.updateSucceed();
     }

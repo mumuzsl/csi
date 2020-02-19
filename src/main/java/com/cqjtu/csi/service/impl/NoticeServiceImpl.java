@@ -15,6 +15,9 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+
+import java.util.Optional;
 
 /**
  * @author mumu
@@ -46,10 +49,13 @@ public class NoticeServiceImpl extends AbstractCrudService<Notice, Integer> impl
 
     @Override
     public NoticeDTO convert(Notice notice) {
+        Assert.notNull(notice, "notice not be null");
+
         NoticeDTO noticeDTO = new NoticeDTO().convertFrom(notice);
-        userService.getById(notice.getId())
-                .map(User::getUsername)
+        Optional.ofNullable(notice.getUserId())
+                .map(userService::addUsername)
                 .ifPresent(noticeDTO::setUsername);
+
         return noticeDTO;
     }
 

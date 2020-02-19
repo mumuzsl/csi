@@ -49,4 +49,8 @@ public class CsiConst {
     public static String toFacePath(String name) {
         return String.format(FACE_FILE_FORMAT, name);
     }
+
+    public static String toDocumentPath(String filename) {
+        return DOCUMENT_DIR + filename;
+    }
 }

@@ -54,6 +54,13 @@ public class UserController {
         return null == keyword ? userService.pageBy(pageable) : userService.search(keyword, status, PageUtils.of(pageable));
     }
 
+    @GetMapping(value = "detail")
+    public User detail(@RequestParam("token") String token) {
+        return userService
+                .getByToken(token)
+                .orElse(null);
+    }
+
     //    @GetMapping
     public String search2(String keyword, String status, Pageable pageable, HttpServletResponse response) {
         response.setContentType("text/plain");

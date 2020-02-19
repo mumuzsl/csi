@@ -5,6 +5,7 @@ import com.cqjtu.csi.cache.CacheStore;
 import com.cqjtu.csi.cache.InMemoryCacheStore;
 import com.cqjtu.csi.core.FaceClient;
 import com.cqjtu.csi.core.CsiConst;
+import com.cqjtu.csi.core.role.Role;
 import com.cqjtu.csi.exception.BadRequestException;
 import com.cqjtu.csi.exception.NotFoundException;
 import com.cqjtu.csi.model.dto.base.InputConverter;
@@ -134,7 +135,20 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
 
     @Override
     public void logout(AuthToken authToken) {
-        tokenService.clearToken(authToken.getAccessToken());
+        logout(authToken.getAccessToken());
+    }
+
+    @Override
+    public void logout(String token) {
+        tokenService.clearToken(token);
+    }
+
+    @Override
+    public Optional<User> getByToken(String token) {
+        return tokenService.getOne(token)
+                .map(Token::getUserId)
+                .map(this::getOneById)
+                .get();
     }
 
     @Override
@@ -183,7 +197,7 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
                 userRepository.findByUsernameContaining(keyword, pageable) :
                 userRepository.findByUsernameContainingAndStatusEquals(
                         keyword,
-                        BaseUtils.userStatus(status),
+                        Role.userStatus(status),
                         pageable
                 );
     }
@@ -218,5 +232,14 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
             throw new BadRequestException("用户不存在");
         }
         return noticeParam.convertTo();
+    }
+
+    @Override
+    public String addUsername(Integer id) {
+        return Optional.ofNullable(id)
+                .map(this::getOneById)
+                .map(Optional::get)
+                .map(User::getUsername)
+                .orElse("用户不存在");
     }
 }

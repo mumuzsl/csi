@@ -1,6 +1,8 @@
 package com.cqjtu.csi.security.filter;
 
 import com.cqjtu.csi.core.role.Role;
+import com.cqjtu.csi.exception.AuthenticationException;
+import com.cqjtu.csi.model.entity.Token;
 import com.cqjtu.csi.model.entity.User;
 import com.cqjtu.csi.service.TokenService;
 import com.cqjtu.csi.service.UserService;
@@ -11,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * @author mumu
@@ -28,15 +31,19 @@ public class RoleFilter extends RequestFilter {
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = getToken(request);
 
-        Integer userId = tokenService.getByToken(token).getUserId();
-        User user = userService.getOne(userId);
+        boolean flag = Optional.ofNullable(token)
+                .map(tokenService::getByToken)
+                .map(Token::getUserId)
+                .map(userService::getOneById)
+                .map(Optional::get)
+                .map(User::getStatus)
+                .map(Role.ADMIN::compare)
+                .orElse(false);
 
-        if (Role.ADMIN.compare(user.getStatus())) {
+        if (flag) {
             filterChain.doFilter(request, response);
         } else {
             response.setStatus(HttpStatus.FORBIDDEN.value());
         }
-
     }
-
 }
