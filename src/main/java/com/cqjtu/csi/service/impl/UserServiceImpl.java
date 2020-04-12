@@ -47,8 +47,8 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
     /**
      * Expired seconds.
      */
-    private final static int ACCESS_TOKEN_EXPIRED_SECONDS = 60;
-    private final static String MISMACTH_TIP = "用户名或者密码不正确";
+    private static final int ACCESS_TOKEN_EXPIRED_SECONDS = 60;
+    private static final String MISMACTH_TIP = "用户名或者密码不正确";
     private final UserRepository userRepository;
     private final TokenService tokenService;
     private final CacheStore<String, String> cacheStore;
@@ -65,9 +65,8 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
         JSONObject object = FaceClient.search(base64);
 
         if (FaceClient.verify(object)) {
-            Integer useId = FaceClient.getUseId(object);
-            User user = userRepository.getOne(useId);
-            return BaseResponse.ok(CsiConst.LOGIN_SUCCESS, buildAuthToken(user));
+            AuthToken authToken = new AuthToken(tokenService.createToken(FaceClient.getUserId(object)));
+            return BaseResponse.ok(CsiConst.LOGIN_SUCCESS, authToken);
         } else {
             return BaseResponse.to400(CsiConst.LOGIN_FAILED);
         }
@@ -75,8 +74,14 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
 
     @Override
     public BaseResponse addFace(Integer id, String base64) {
-        String faceToken = FaceClient.addFace(id, base64);
+        FaceClient.addFace(id, base64);
         return BaseResponse.ok(CsiConst.FACE_ADD_SUCCESS);
+    }
+
+    @Override
+    public BaseResponse addFaceByToken(String token, String base64) {
+        Optional<Integer> userIdOpt = tokenService.getOne(token).map(Token::getUserId);
+        return userIdOpt.isPresent() ? addFace(userIdOpt.get(), base64) : BaseResponse.to400("无法找到token对应的用户");
     }
 
     @Override
@@ -148,7 +153,7 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
         return tokenService.getOne(token)
                 .map(Token::getUserId)
                 .map(this::getOneById)
-                .get();
+                .orElse(null);
     }
 
     @Override

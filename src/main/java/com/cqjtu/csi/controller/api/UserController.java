@@ -1,20 +1,15 @@
 package com.cqjtu.csi.controller.api;
 
-import cn.hutool.json.JSONUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
+
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 import com.cqjtu.csi.model.entity.User;
 import com.cqjtu.csi.model.param.LoginParam;
 import com.cqjtu.csi.model.param.UserParam;
 import com.cqjtu.csi.model.support.BaseResponse;
-import com.cqjtu.csi.security.support.ApiPage;
 import com.cqjtu.csi.security.token.AuthToken;
 import com.cqjtu.csi.service.UserService;
 import com.cqjtu.csi.utils.BaseUtils;
 import com.cqjtu.csi.utils.PageUtils;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
@@ -24,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,13 +49,14 @@ public class UserController {
     }
 
     @GetMapping(value = "detail")
-    public User detail(@RequestParam("token") String token) {
+    public User detail(@RequestHeader("token") String token) {
         return userService
                 .getByToken(token)
                 .orElse(null);
     }
 
     //    @GetMapping
+    @Deprecated
     public String search2(String keyword, String status, Pageable pageable, HttpServletResponse response) {
         response.setContentType("text/plain");
         Page search = search(keyword, status, null);

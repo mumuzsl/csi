@@ -5,7 +5,6 @@ import com.cqjtu.csi.security.filter.CorsFilter;
 import com.cqjtu.csi.security.filter.PageableFilter;
 import com.cqjtu.csi.security.filter.RequestFilter;
 import com.cqjtu.csi.security.filter.RoleFilter;
-import com.cqjtu.csi.security.handle.FailureHandler;
 import com.cqjtu.csi.service.TokenService;
 import com.cqjtu.csi.service.UserService;
 import freemarker.core.TemplateClassResolver;
@@ -43,7 +42,7 @@ public class CsiConfigurer implements WebMvcConfigurer {
 
         corsFilter.setOrder(Ordered.HIGHEST_PRECEDENCE + 10);
         corsFilter.setFilter(new CorsFilter());
-        corsFilter.addUrlPatterns("/api/*");
+        corsFilter.addUrlPatterns("/*");
 
         return corsFilter;
     }
@@ -57,11 +56,13 @@ public class CsiConfigurer implements WebMvcConfigurer {
     @Bean
     public FilterRegistrationBean<RequestFilter> requestFilter(TokenService tokenService) {
         RequestFilter requestFilter = new RequestFilter(tokenService);
-//        requestFilter.addExcludeUrlPatterns(
+        requestFilter.addExcludeUrlPatterns(
 //                "/login",
 //                "/logout",
 //                "/register"
-//        );
+                "/login",
+                "/api/face/login"
+        );
 
         FilterRegistrationBean<RequestFilter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(requestFilter);
@@ -131,7 +132,7 @@ public class CsiConfigurer implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/ui/");
+                .addResourceLocations("classpath:/csi-ui/");
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")

@@ -10,6 +10,7 @@ import com.cqjtu.csi.model.support.BaseResponse;
 import com.cqjtu.csi.service.DocumentService;
 import com.cqjtu.csi.service.TokenService;
 import com.cqjtu.csi.service.UserService;
+import com.cqjtu.csi.service.impl.TokenServiceImpl;
 import com.cqjtu.csi.utils.BaseUtils;
 import com.cqjtu.csi.utils.FileUtils;
 import com.cqjtu.csi.utils.FileUtils.FileSuffixFilter;
@@ -81,18 +82,14 @@ public class DocumentController {
                                @RequestParam(value = "remark", required = false) String remark,
                                @RequestParam(value = "userId", required = false) Integer userId,
                                @RequestPart(value = "file", required = false) MultipartFile file,
-                               HttpServletRequest request) throws IOException {
+                               @RequestHeader("token") String token) throws IOException {
 //        System.out.println("fname: " + file.getName());
 //        System.out.println("fsize: " + file.getSize());
         Document document = new Document();
         document.setTitle(title);
         document.setRemark(remark);
 
-        // 通过token为文档的创建提供创建人的userId
-        String token = request.getParameter("token");
-        tokenService.getOne(token)
-                .map(Token::getUserId)
-                .ifPresent(document::setUserId);
+        tokenService.setUserId(token, document::setUserId);
 
         document.setFilename(check(file));
         documentService.insert(document);

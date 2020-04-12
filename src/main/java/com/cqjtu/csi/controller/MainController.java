@@ -1,12 +1,7 @@
 package com.cqjtu.csi.controller;
 
 import cn.hutool.core.io.FileTypeUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.servlet.ServletUtil;
-import com.alibaba.fastjson.JSON;
-import com.cqjtu.csi.core.ControllerExceptionHandler;
 import com.cqjtu.csi.core.CsiConst;
 import com.cqjtu.csi.exception.BadRequestException;
 import com.cqjtu.csi.exception.NotFoundException;
@@ -14,30 +9,21 @@ import com.cqjtu.csi.model.entity.Document;
 import com.cqjtu.csi.model.param.LoginParam;
 import com.cqjtu.csi.model.param.UserParam;
 import com.cqjtu.csi.model.support.BaseResponse;
-import com.cqjtu.csi.security.handle.FailureHandler;
 import com.cqjtu.csi.security.token.AuthToken;
 import com.cqjtu.csi.service.DocumentService;
 import com.cqjtu.csi.service.UserService;
 import com.cqjtu.csi.utils.BaseUtils;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
-import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
-import java.nio.charset.Charset;
-import java.util.Map;
 
 /**
  * @author mumu
@@ -60,6 +46,11 @@ public class MainController {
     @GetMapping
     public void index(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.sendRedirect("index.html");
+    }
+
+    @GetMapping(value = "face/register")
+    public void faceRegister() {
+
     }
 
     @PostMapping
@@ -86,16 +77,8 @@ public class MainController {
         return userService.login(loginParam);
     }
 
-//    @PostMapping(value = "logout")
-//    @ResponseBody
-//    public BaseResponse logout(@RequestBody String json) {
-//        AuthToken authToken = JSON.parseObject(json, AuthToken.class);
-//        userService.logout(authToken);
-//        return BaseResponse.ok("已退出");
-//    }
-
     @GetMapping(value = "logout")
-    public String logout(@RequestParam("token") String token) {
+    public String logout(@RequestHeader("token") String token) {
 //        userService.logout(token);
         return "logout";
     }

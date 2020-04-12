@@ -1,11 +1,8 @@
 package com.cqjtu.csi.service;
 
-import com.cqjtu.csi.exception.BadRequestException;
 import com.cqjtu.csi.model.dto.base.InputConverter;
-import com.cqjtu.csi.model.entity.Notice;
 import com.cqjtu.csi.model.entity.User;
 import com.cqjtu.csi.model.param.LoginParam;
-import com.cqjtu.csi.model.param.NoticeParam;
 import com.cqjtu.csi.model.param.UserParam;
 import com.cqjtu.csi.model.support.BaseResponse;
 import com.cqjtu.csi.security.token.AuthToken;
@@ -59,6 +56,8 @@ public interface UserService extends CrudService<User, Integer> {
     BaseResponse faceMatch(String base64);
 
     BaseResponse addFace(Integer id, String base64);
+
+    BaseResponse addFaceByToken(String token, String base64);
 
     Page<User> search(String keyword, String status, Pageable pageable);
 

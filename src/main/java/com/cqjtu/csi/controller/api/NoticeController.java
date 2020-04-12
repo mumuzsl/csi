@@ -61,13 +61,10 @@ public class NoticeController {
      */
     @PostMapping("a/insert")
     @ApiOperation("添加数据接口")
-    public BaseResponse insert(@RequestBody NoticeParam noticeParam, HttpServletRequest request) {
+    public BaseResponse insert(@RequestBody NoticeParam noticeParam, @RequestHeader("token") String token) {
         Notice notice = noticeParam.convertTo();
         // 通过token为公告的创建提供创建人的userId
-        String token = request.getParameter("token");
-        tokenService.getOne(token)
-                .map(Token::getUserId)
-                .ifPresent(notice::setUserId);
+        tokenService.setUserId(token, notice::setUserId);
         noticeService.insert(notice);
         return BaseUtils.insertSucceed();
     }

@@ -5,8 +5,11 @@ import cn.hutool.core.io.FileUtil;
 import com.baidu.aip.face.AipFace;
 import com.baidu.aip.face.MatchRequest;
 import com.cqjtu.csi.exception.FaceClientException;
+import com.cqjtu.csi.security.filter.RequestFilter;
 import com.cqjtu.csi.utils.BaseUtils;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.util.*;
@@ -20,6 +23,8 @@ import java.util.*;
 public class FaceClient {
 
     private FaceClient() {}
+
+    private static final Logger log = LoggerFactory.getLogger(RequestFilter.class);
 
     // 常用百度api返回的常用json属性
     private static final String FACE_TOKEN = "face_token";
@@ -64,7 +69,7 @@ public class FaceClient {
     public static JSONObject search(String base64) {
         JSONObject jsonObject = CLENT.search(base64, IMAGE_TYPE, GROUP, OPTIONS);
         return Optional.ofNullable(jsonObject)
-                .map(object -> check(object))
+                .map(FaceClient::check)
                 .map(integer -> jsonObject.has(RESULT))
                 .map(b -> b ? jsonObject.getJSONObject(RESULT) : null)
                 .map(object -> object.getJSONArray(USER_LIST))
@@ -84,16 +89,17 @@ public class FaceClient {
         return Float.parseFloat(getString(object, SCORE));
     }
 
-    public static Integer getUseId(JSONObject object) {
+    public static Integer getUserId(JSONObject object) {
         return Integer.parseInt(getString(object, USER_ID));
     }
 
     public static String getString(JSONObject object, String field) {
-        return String.valueOf(
-                Optional.ofNullable(object)
-                        .map(o -> o.has(field))
-                        .map(b -> b ? object.get(field) : null)
-                        .orElseThrow(() -> new FaceClientException("无法从json中获取" + field)));
+        log.info("baiduapi current data {}", object);
+        if (object.has(field)) {
+            return String.valueOf(object.get(field));
+        } else {
+            throw new FaceClientException("json中不包含" + field);
+        }
     }
 
     /**
@@ -135,7 +141,7 @@ public class FaceClient {
     public static String addFace(Integer id, String base64) {
         JSONObject res = CLENT.addUser(base64, IMAGE_TYPE, GROUP, String.valueOf(id), OPTIONS);
 //        System.out.println(res.toString());
-        return getString(check(res), FACE_TOKEN);
+        return getString(check(res).getJSONObject(RESULT), FACE_TOKEN);
     }
 
     public static Optional getValue(JSONObject jsonObject, String field) {

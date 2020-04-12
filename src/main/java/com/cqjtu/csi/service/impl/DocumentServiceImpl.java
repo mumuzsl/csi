@@ -1,5 +1,6 @@
 package com.cqjtu.csi.service.impl;
 
+import cn.hutool.core.io.FileUtil;
 import com.cqjtu.csi.core.CsiConst;
 import com.cqjtu.csi.exception.BadRequestException;
 import com.cqjtu.csi.exception.DataException;
@@ -12,9 +13,11 @@ import com.cqjtu.csi.repository.UserRepository;
 import com.cqjtu.csi.service.DocumentService;
 import com.cqjtu.csi.service.UserService;
 import com.cqjtu.csi.service.base.AbstractCrudService;
+import com.cqjtu.csi.utils.FileUtils;
 import com.cqjtu.csi.utils.PageUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -73,25 +76,17 @@ public class DocumentServiceImpl extends AbstractCrudService<Document, Integer> 
         Assert.notNull(document, "document not be null");
 
         Integer id = document.getId();
-        Optional.ofNullable(document.getId())
-                .map(this::getOne)
-                .map(Document::getFilename)
-                .map(CsiConst::toDocumentPath)
-                .map(File::new)
-                .map(this::delFile);
+        delDocumentById(id);
 
         return super.updateById(id, document);
     }
 
-    boolean delFile(File file) {
-        if (!file.exists()) {
-            return false;
-        }
-
-        if (file.isDirectory()) {
-            Optional.ofNullable(file.listFiles())
-                    .ifPresent(files1 -> Arrays.stream(files1).forEach(this::delFile));
-        }
-        return file.delete();
+    @Async
+    public void delDocumentById(Integer id) {
+        Optional.ofNullable(id)
+                .map(this::getOne)
+                .map(Document::getFilename)
+                .map(CsiConst::toDocumentPath)
+                .map(FileUtil::del);
     }
 }

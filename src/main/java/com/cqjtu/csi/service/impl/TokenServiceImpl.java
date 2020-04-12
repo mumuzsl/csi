@@ -12,6 +12,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * @author mumu
@@ -63,6 +64,13 @@ public class TokenServiceImpl extends AbstractCrudService<Token, Integer> implem
     @Override
     public Optional<Token> getOne(String token) {
         return tokenRepository.findByToken(token);
+    }
+
+    @Override
+    public void setUserId(String token, Consumer<? super Integer> consumer) {
+        this.getOne(token)
+                .map(Token::getUserId)
+                .ifPresent(consumer);
     }
 
 }

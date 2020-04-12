@@ -38,17 +38,22 @@ public class RequestFilter extends AbstractFilter {
         // 输出request中的参数名和对应的值
         log.info("{{}}", MapUtil.join(request.getParameterMap(), ",", ":"));
 
-        return request.getParameter("token");
+//        return request.getParameter("token");
+        return request.getHeader("token");
     }
 
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = getToken(request);
 
+        log.info("doFilter");
+
         if (StringUtils.isBlank(token)) {
             failureHandler.doHandle(request, response, new AuthenticationException("没有token"));
             return;
         }
+
+        log.info("doFilter2");
 
         Optional<Token> tokenOptional = tokenService.getOne(token);
 

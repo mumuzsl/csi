@@ -1,17 +1,16 @@
 package com.cqjtu.csi.core;
 
-import com.alibaba.fastjson.JSON;
+
 import com.cqjtu.csi.exception.BaseException;
 import com.cqjtu.csi.exception.DataException;
 import com.cqjtu.csi.model.support.BaseResponse;
-import com.cqjtu.csi.security.filter.RequestFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -47,10 +46,20 @@ public class ControllerExceptionHandler {
         return baseResponse;
     }
 
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BaseResponse handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        BaseResponse<?> baseResponse = handleBaseException(e);
+        baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+        log.info("----------{}----------", "MissingServletRequestParameterException");
+        return baseResponse;
+    }
+
     @ExceptionHandler(BaseException.class)
-    public BaseResponse handleHaloException(BaseException e) {
+    public BaseResponse handleMyException(BaseException e) {
         BaseResponse<Object> baseResponse = handleBaseException(e);
         baseResponse.setStatus(e.getStatus().value());
+        baseResponse.setDataToJSON(e.getErrorData());
         return baseResponse;
     }
 

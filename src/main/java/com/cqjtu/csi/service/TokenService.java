@@ -1,11 +1,11 @@
 package com.cqjtu.csi.service;
 
 import com.cqjtu.csi.model.entity.Token;
-import com.cqjtu.csi.security.token.AuthToken;
 import com.cqjtu.csi.service.base.CrudService;
 import org.springframework.lang.NonNull;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * @author mumu
@@ -26,4 +26,5 @@ public interface TokenService extends CrudService<Token, Integer> {
 
     boolean isExpired(Token token);
 
+    void setUserId(String token, Consumer<? super Integer> consumer);
 }

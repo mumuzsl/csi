@@ -1,11 +1,10 @@
 package com.cqjtu.csi.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.scheduling.annotation.Async;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.File;
+import java.util.*;
 
 /**
  * @author mumu
@@ -55,5 +54,17 @@ public class FileUtils {
 
     public static FileSuffixFilter buildSuffixFilter(String... suffixs) {
         return new FileSuffixFilter().adds(suffixs);
+    }
+
+    public void delFile(File file) {
+        if (!file.exists()) {
+            return;
+        }
+
+        if (file.isDirectory()) {
+            Optional.ofNullable(file.listFiles())
+                    .ifPresent(files1 -> Arrays.stream(files1).forEach(this::delFile));
+        }
+        file.delete();
     }
 }

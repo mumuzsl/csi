@@ -1,17 +1,21 @@
 package com.cqjtu.csi.core.role;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author mumu
  * @date 2020/1/21
  */
-public class Role {
-    public static final Role ADMIN = new Role("管理员", 1);
-    public static final Role NORMAL = new Role("普通用户", 2);
+public enum Role {
+    /**
+     * 管理员
+     */
+    ADMIN("admin", 1),
+    /**
+     * 普通用户
+     */
+    NORMAL("normal", 2);
+
     private static final HashMap<String, Role> ROLES = new HashMap<>(2);
 
     static {
@@ -22,7 +26,7 @@ public class Role {
     private String roleName;
     private int roleStatus;
 
-    public Role(String roleName, int roleStatus) {
+    Role(String roleName, int roleStatus) {
         this.roleName = roleName;
         this.roleStatus = roleStatus;
     }
@@ -45,7 +49,7 @@ public class Role {
         return roleName;
     }
 
-    public void setRoleName(String roleName) {
+    void setRoleName(String roleName) {
         this.roleName = roleName;
     }
 
@@ -53,7 +57,7 @@ public class Role {
         return roleStatus;
     }
 
-    public void setRoleStatus(int roleStatus) {
+    void setRoleStatus(int roleStatus) {
         this.roleStatus = roleStatus;
     }
 }
