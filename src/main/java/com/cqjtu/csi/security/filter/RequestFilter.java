@@ -55,16 +55,12 @@ public class RequestFilter extends AbstractFilter {
 
         log.info("doFilter2");
 
-        Optional<Token> tokenOptional = tokenService.getOne(token);
-
-        boolean flag = !tokenOptional.isPresent() || tokenService.isExpired(tokenOptional.get());
-
-        if (flag) {
+        if (!tokenService.verify(token)) {
             failureHandler.doHandle(request, response, new AuthenticationException("token无效"));
             return;
         }
 
-//        log.info("request is ok");
+        log.info("doFilter3");
 
         filterChain.doFilter(request, response);
     }

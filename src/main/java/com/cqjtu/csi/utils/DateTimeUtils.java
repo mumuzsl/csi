@@ -1,7 +1,6 @@
 package com.cqjtu.csi.utils;
 
 import java.time.*;
-import java.time.temporal.TemporalField;
 import java.util.Date;
 
 /**
@@ -14,8 +13,8 @@ public class DateTimeUtils {
 
     }
 
-    public static LocalDate now() {
-        return LocalDate.now(ZoneId.of("Asia/Shanghai"));
+    public static Long now() {
+        return System.currentTimeMillis();
 
     }
 
@@ -24,11 +23,11 @@ public class DateTimeUtils {
     }
 
     public static boolean after(long date) {
-        return compare(now().toEpochDay(), date);
+        return compare(now(), date);
     }
 
     public static boolean before(long date) {
-        return compare(date, now().toEpochDay());
+        return compare(date, now());
     }
 
     public static boolean compare(long date1, long date2) {

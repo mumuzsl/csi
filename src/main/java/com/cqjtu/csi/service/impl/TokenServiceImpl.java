@@ -73,4 +73,8 @@ public class TokenServiceImpl extends AbstractCrudService<Token, Integer> implem
                 .ifPresent(consumer);
     }
 
+    @Override
+    public boolean verify(String token) {
+        return !(getOne(token).map(this::isExpired).orElse(true));
+    }
 }

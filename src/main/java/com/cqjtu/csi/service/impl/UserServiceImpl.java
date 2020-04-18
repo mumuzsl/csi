@@ -7,14 +7,13 @@ import com.cqjtu.csi.core.FaceClient;
 import com.cqjtu.csi.core.CsiConst;
 import com.cqjtu.csi.core.role.Role;
 import com.cqjtu.csi.exception.BadRequestException;
+import com.cqjtu.csi.exception.DataException;
 import com.cqjtu.csi.exception.NotFoundException;
 import com.cqjtu.csi.model.dto.base.InputConverter;
-import com.cqjtu.csi.model.entity.Notice;
 import com.cqjtu.csi.model.entity.Token;
 import com.cqjtu.csi.model.entity.User;
 import com.cqjtu.csi.model.param.LoginParam;
-import com.cqjtu.csi.model.param.NoticeParam;
-import com.cqjtu.csi.model.param.UserParam;
+import com.cqjtu.csi.model.param.PasswordParam;
 import com.cqjtu.csi.model.support.BaseResponse;
 import com.cqjtu.csi.repository.UserRepository;
 import com.cqjtu.csi.security.context.AdminContext;
@@ -26,7 +25,6 @@ import com.cqjtu.csi.service.UserService;
 import com.cqjtu.csi.service.base.AbstractCrudService;
 import com.cqjtu.csi.utils.BaseUtils;
 import com.cqjtu.csi.utils.BeanUtils;
-import com.cqjtu.csi.utils.PageUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
@@ -139,6 +137,12 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
     }
 
     @Override
+    public User update(User user) {
+        user.setPassword(null);
+        return super.update(user);
+    }
+
+    @Override
     public void logout(AuthToken authToken) {
         logout(authToken.getAccessToken());
     }
@@ -172,11 +176,15 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
     }
 
     @Override
-    public void register(UserParam userParam) {
-
-        User user = userParam.convertTo();
-
-        userRepository.save(user);
+    public User insert(User user) {
+        if (getByLoginName(user.getLoginName()).isPresent()) {
+            throw new BadRequestException("登录名已存在");
+        }
+        String password = user.getPassword();
+        if (StringUtils.isBlank(password) || password.length() < 4 || password.length() > 20) {
+            throw new BadRequestException("密码不能为空");
+        }
+        return super.insert(user);
     }
 
     @Override
@@ -242,9 +250,20 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
     @Override
     public String addUsername(Integer id) {
         return Optional.ofNullable(id)
-                .map(this::getOneById)
-                .map(Optional::get)
+                .map(this::getOne)
                 .map(User::getUsername)
                 .orElse("用户不存在");
+    }
+
+    @Override
+    public void updatePassword(String token, PasswordParam pw) {
+        Integer userId = tokenService.getByToken(token).getUserId();
+        User one = getOne(userId);
+        if (!passwordMatch(getOne(userId), pw.getOldPassword())) {
+            throw new BadRequestException("旧密码不正确");
+        }
+        User user = new User();
+        user.setPassword(pw.getNewPassword());
+        updateById(userId, user);
     }
 }

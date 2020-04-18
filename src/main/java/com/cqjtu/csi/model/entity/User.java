@@ -60,6 +60,15 @@ public class User extends BaseEntity {
     public void prePersist() {
         super.prePersist();
 
+        pre();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        pre();
+    }
+
+    private void pre() {
         if (password != null) {
             this.password = BCrypt.hashpw(password, BCrypt.gensalt());
         }

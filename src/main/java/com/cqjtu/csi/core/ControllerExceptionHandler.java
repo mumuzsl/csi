@@ -1,6 +1,7 @@
 package com.cqjtu.csi.core;
 
 
+import com.cqjtu.csi.exception.BadRequestException;
 import com.cqjtu.csi.exception.BaseException;
 import com.cqjtu.csi.exception.DataException;
 import com.cqjtu.csi.model.support.BaseResponse;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2020/1/21
  */
 @RestControllerAdvice({"com.cqjtu.csi.controller.api"})
+@ControllerAdvice({"com.cqjtu.csi.controller"})
 public class ControllerExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
@@ -54,6 +56,16 @@ public class ControllerExceptionHandler {
         log.info("----------{}----------", "MissingServletRequestParameterException");
         return baseResponse;
     }
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BaseResponse handleBadRequestException(BadRequestException e) {
+        BaseResponse<Object> baseResponse = handleBaseException(e);
+        baseResponse.setStatus(e.getStatus().value());
+        baseResponse.setDataToJSON(e.getErrorData());
+        return baseResponse;
+    }
+
 
     @ExceptionHandler(BaseException.class)
     public BaseResponse handleMyException(BaseException e) {

@@ -18,6 +18,7 @@ import com.cqjtu.csi.utils.PageUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -70,6 +71,7 @@ public class DocumentServiceImpl extends AbstractCrudService<Document, Integer> 
 
         return documentDTO;
     }
+
 
     @Override
     public Document update(Document document) {

@@ -3,7 +3,7 @@ package com.cqjtu.csi.service;
 import com.cqjtu.csi.model.dto.base.InputConverter;
 import com.cqjtu.csi.model.entity.User;
 import com.cqjtu.csi.model.param.LoginParam;
-import com.cqjtu.csi.model.param.UserParam;
+import com.cqjtu.csi.model.param.PasswordParam;
 import com.cqjtu.csi.model.support.BaseResponse;
 import com.cqjtu.csi.security.token.AuthToken;
 import com.cqjtu.csi.service.base.CrudService;
@@ -29,8 +29,6 @@ public interface UserService extends CrudService<User, Integer> {
      * @return true if the given password is match the user password; false otherwise
      */
     boolean passwordMatch(@NonNull User user, @Nullable String plainPassword);
-
-    void register(UserParam userParam);
 
     void registerAdmin();
 
@@ -64,4 +62,6 @@ public interface UserService extends CrudService<User, Integer> {
     <T> T check(InputConverter<T> param);
 
     String addUsername(Integer id);
+
+    void updatePassword(String token, PasswordParam pw);
 }

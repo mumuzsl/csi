@@ -77,6 +77,7 @@ public abstract class AbstractCrudService<DOMAIN, ID> implements CrudService<DOM
     @Override
     @Transactional
     public DOMAIN insert(DOMAIN domain) {
+        Assert.notNull(domain, "domain not be null");
         return repository.save(domain);
     }
 

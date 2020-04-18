@@ -2,8 +2,10 @@ package com.cqjtu.csi.controller.api;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.cqjtu.csi.model.dto.UserDTO;
 import com.cqjtu.csi.model.entity.User;
 import com.cqjtu.csi.model.param.LoginParam;
+import com.cqjtu.csi.model.param.PasswordParam;
 import com.cqjtu.csi.model.param.UserParam;
 import com.cqjtu.csi.model.support.BaseResponse;
 import com.cqjtu.csi.security.token.AuthToken;
@@ -12,11 +14,14 @@ import com.cqjtu.csi.utils.BaseUtils;
 import com.cqjtu.csi.utils.PageUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -36,11 +41,6 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
-    }
-
-    @PostMapping(value = "login")
-    public AuthToken login(@RequestBody @Valid LoginParam loginParam) {
-        return userService.login(loginParam);
     }
 
     @GetMapping
@@ -104,8 +104,8 @@ public class UserController {
      * @return 更新成功BaseResponse
      */
     @PostMapping("a/update")
-    public BaseResponse update(@RequestBody User user) {
-        userService.update(user);
+    public BaseResponse update(@RequestBody UserParam user) {
+        userService.update(user.convertTo());
         return BaseUtils.updateSucceed();
     }
 }

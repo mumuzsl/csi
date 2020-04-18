@@ -1,28 +1,27 @@
 package com.cqjtu.csi.model.dto;
 
 
+import com.cqjtu.csi.model.dto.base.OutputConverter;
+import com.cqjtu.csi.model.entity.User;
+
 /**
  * @author mumu
  * @date 2020/4/12
  */
-public class UserDTO {
-
-    private Integer id;
+public class UserDTO implements OutputConverter<UserDTO, User> {
 
     private String loginName;
 
-    private String password;
-
-    private Integer status;
-
     private String username;
 
-    public Integer getId() {
-        return id;
+    private String status;
+
+    public String getStatus() {
+        return status;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getLoginName() {
@@ -33,22 +32,6 @@ public class UserDTO {
         this.loginName = loginName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -56,4 +39,5 @@ public class UserDTO {
     public void setUsername(String username) {
         this.username = username;
     }
+
 }

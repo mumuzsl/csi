@@ -62,4 +62,5 @@ public class DocumentDTO extends BaseDTO implements OutputConverter<DocumentDTO,
     public void setUsername(String username) {
         this.username = username;
     }
+
 }

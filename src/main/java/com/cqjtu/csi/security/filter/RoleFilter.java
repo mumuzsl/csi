@@ -2,8 +2,10 @@ package com.cqjtu.csi.security.filter;
 
 import com.cqjtu.csi.core.role.Role;
 import com.cqjtu.csi.exception.AuthenticationException;
+import com.cqjtu.csi.exception.PermissionException;
 import com.cqjtu.csi.model.entity.Token;
 import com.cqjtu.csi.model.entity.User;
+import com.cqjtu.csi.security.handle.FailureHandler;
 import com.cqjtu.csi.service.TokenService;
 import com.cqjtu.csi.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -43,7 +45,8 @@ public class RoleFilter extends RequestFilter {
         if (flag) {
             filterChain.doFilter(request, response);
         } else {
-            response.setStatus(HttpStatus.FORBIDDEN.value());
+//            response.setStatus(HttpStatus.FORBIDDEN.value());
+            FailureHandler.doHandle(response, new PermissionException("权限问题"));
         }
     }
 }

@@ -2,17 +2,18 @@ package com.cqjtu.csi.model.param;
 
 import com.cqjtu.csi.model.dto.base.InputConverter;
 import com.cqjtu.csi.model.entity.User;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 /**
  * @author mumu
- * @date 2020/1/11
+ * @date 2020/4/18
  */
 public class UserParam implements InputConverter<User> {
+
+    private int id;
 
     @NotBlank(message = "登录名不能为空")
     @Size(max = 20, message = "登录名的字符长度不能超过 {max}")
@@ -22,11 +23,17 @@ public class UserParam implements InputConverter<User> {
     @Size(max = 20, message = "用户名的字符长度不能超过 {max}")
     private String username;
 
-    @NotBlank(message = "密码不能为空")
-    @Size(min = 4, max = 32, message = "密码的字符长度必须在 {min} - {max} 之间")
     private String password;
 
     private String status;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
 
     public String getStatus() {
         return status;

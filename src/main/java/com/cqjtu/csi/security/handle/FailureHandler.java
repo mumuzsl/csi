@@ -33,6 +33,6 @@ public class FailureHandler {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("utf-8");
         response.setStatus(exception.getStatus().value());
-        response.getWriter().write(JSONObject.toJSONString(errorDetail));
+        response.getWriter().write(JSON.toJSONString(errorDetail));
     }
 }

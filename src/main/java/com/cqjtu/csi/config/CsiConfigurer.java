@@ -61,7 +61,8 @@ public class CsiConfigurer implements WebMvcConfigurer {
 //                "/logout",
 //                "/register"
                 "/login",
-                "/api/face/login"
+                "/api/face/login",
+                "/download/*"
         );
 
         FilterRegistrationBean<RequestFilter> filterRegistrationBean = new FilterRegistrationBean<>();
@@ -70,7 +71,7 @@ public class CsiConfigurer implements WebMvcConfigurer {
                 "/api/*",
                 "/logout",
                 "/register",
-                "/download/*"
+                "/update_pw"
         );
         filterRegistrationBean.setOrder(0);
 
@@ -104,8 +105,8 @@ public class CsiConfigurer implements WebMvcConfigurer {
      * @return 过滤器注册Bean
      */
     @Bean
-    public FilterRegistrationBean<RoleFilter> adminFilter(UserService userService,
-                                                          TokenService tokenService) {
+    public FilterRegistrationBean<RoleFilter> roleFilter(UserService userService,
+                                                         TokenService tokenService) {
         RoleFilter adminFilter = new RoleFilter(userService, tokenService);
 
         FilterRegistrationBean<RoleFilter> filterRegistrationBean = new FilterRegistrationBean<>();

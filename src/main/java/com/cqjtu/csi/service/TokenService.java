@@ -27,4 +27,6 @@ public interface TokenService extends CrudService<Token, Integer> {
     boolean isExpired(Token token);
 
     void setUserId(String token, Consumer<? super Integer> consumer);
+
+    boolean verify(@NonNull String token);
 }

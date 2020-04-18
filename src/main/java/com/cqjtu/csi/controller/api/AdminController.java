@@ -1,11 +1,7 @@
 package com.cqjtu.csi.controller.api;
 
 
-import com.cqjtu.csi.model.param.LoginParam;
-import com.cqjtu.csi.model.param.UserParam;
-import com.cqjtu.csi.security.token.AuthToken;
 import com.cqjtu.csi.service.AdminService;
-import com.cqjtu.csi.service.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,9 +26,5 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    @PostMapping(value = "add")
-    public Object add(@RequestBody @Valid UserParam userParam) {
-        return null;
-    }
 
 }
